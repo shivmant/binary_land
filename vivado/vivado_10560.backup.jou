@@ -1,0 +1,85 @@
+#-----------------------------------------------------------
+# Vivado v2017.3 (64-bit)
+# SW Build 2018833 on Wed Oct  4 19:58:22 MDT 2017
+# IP Build 2016188 on Wed Oct  4 21:52:56 MDT 2017
+# Start of session at: Sat Apr 25 12:29:09 2020
+# Process ID: 10560
+# Current directory: C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent16732 C:\Users\pawel\Desktop\binary_land\uec2_projekt\vivado\binary_land.xpr
+# Log file: C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/vivado.log
+# Journal file: C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.xpr
+update_compile_order -fileset sources_1
+add_files -fileset constrs_1 -norecurse {C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/constrs_1/imports/Basys3_Master.xdc C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/constrs_1/imports/vga_example.xdc}
+export_ip_user_files -of_objects  [get_files {{C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/constrs_1/imports/pobrane chrome/vga_example.xdc}}] -no_script -reset -force -quiet
+remove_files  -fileset constrs_1 {{C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/constrs_1/imports/pobrane chrome/vga_example.xdc}}
+set_property is_enabled false [get_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/constrs_1/imports/vga_example.xdc]
+add_files {C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/imports/vga_timing.v C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/new/wall.v C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_wiz_0/clk_wiz_0.xci C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/new/draw_object.v C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/new/draw_background.v C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/new/main.v}
+export_ip_user_files -of_objects  [get_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_wiz_0/clk_wiz_0.xci] -lib_map_path [list {modelsim=C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.cache/compile_simlib/modelsim} {questa=C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.cache/compile_simlib/questa} {riviera=C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.cache/compile_simlib/riviera} {activehdl=C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.cache/compile_simlib/activehdl}] -force -quiet
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/wall.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/wall.v
+export_ip_user_files -of_objects  [get_files {{C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/imports/pobrane chrome/vga_timing.v}}] -no_script -reset -force -quiet
+remove_files  {{C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/imports/pobrane chrome/vga_timing.v}}
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/main.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/main.v
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/draw_object.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/draw_object.v
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/draw_background.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/new/draw_background.v
+reset_property NAME [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci]
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_wiz_0/clk_wiz_0.xci] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_wiz_0/clk_wiz_0.xci
+close [ open C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguin.v w ]
+add_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguin.v
+update_compile_order -fileset sources_1
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguin.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguin.v
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguin.v
+close [ open C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguins.v w ]
+add_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguins.v
+update_compile_order -fileset sources_1
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguins.v] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/penguins.v
+close [ open C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/hero_ctl.v w ]
+add_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/hero_ctl.v
+update_compile_order -fileset sources_1
+export_ip_user_files -of_objects  [get_files C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci] -no_script -reset -force -quiet
+remove_files  C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci
+create_ip -name clk_wiz -vendor xilinx.com -library ip -version 5.4 -module_name clk_generator -dir c:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip
+set_property -dict [list CONFIG.Component_Name {clk_generator} CONFIG.CLKOUT2_USED {false} CONFIG.PRIMARY_PORT {clk} CONFIG.CLK_OUT1_PORT {clk65MHz} CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {65.000} CONFIG.USE_SAFE_CLOCK_STARTUP {true} CONFIG.CLKOUT1_DRIVES {BUFGCE} CONFIG.CLKOUT2_DRIVES {BUFGCE} CONFIG.CLKOUT3_DRIVES {BUFGCE} CONFIG.CLKOUT4_DRIVES {BUFGCE} CONFIG.CLKOUT5_DRIVES {BUFGCE} CONFIG.CLKOUT6_DRIVES {BUFGCE} CONFIG.CLKOUT7_DRIVES {BUFGCE} CONFIG.FEEDBACK_SOURCE {FDBK_AUTO} CONFIG.MMCM_DIVCLK_DIVIDE {5} CONFIG.MMCM_CLKFBOUT_MULT_F {50.375} CONFIG.MMCM_CLKOUT0_DIVIDE_F {15.500} CONFIG.MMCM_CLKOUT1_DIVIDE {1} CONFIG.NUM_OUT_CLKS {1} CONFIG.CLKOUT1_JITTER {254.866} CONFIG.CLKOUT1_PHASE_ERROR {297.890} CONFIG.CLKOUT2_JITTER {636.825} CONFIG.CLKOUT2_PHASE_ERROR {871.302}] [get_ips clk_generator]
+generate_target {instantiation_template} [get_files c:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_generator/clk_generator.xci]
+update_compile_order -fileset sources_1
+set_property generate_synth_checkpoint false [get_files  c:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_generator/clk_generator.xci]
+export_ip_user_files -of_objects  [get_files c:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_generator/clk_generator.xci] -no_script -reset -force -quiet
+remove_files  c:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.srcs/sources_1/ip/clk_generator/clk_generator.xci
+create_ip -name clk_wiz -vendor xilinx.com -library ip -version 5.4 -module_name clk_generator -dir C:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip
+set_property -dict [list CONFIG.Component_Name {clk_generator} CONFIG.ENABLE_CLOCK_MONITOR {false} CONFIG.CLKOUT2_USED {true} CONFIG.PRIMARY_PORT {clk} CONFIG.CLK_OUT1_PORT {clk65MHz} CONFIG.CLK_OUT2_PORT {clk100MHz} CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {65.000} CONFIG.USE_SAFE_CLOCK_STARTUP {true} CONFIG.PRIMITIVE {MMCM} CONFIG.CLKOUT1_DRIVES {BUFGCE} CONFIG.CLKOUT2_DRIVES {BUFGCE} CONFIG.CLKOUT3_DRIVES {BUFGCE} CONFIG.CLKOUT4_DRIVES {BUFGCE} CONFIG.CLKOUT5_DRIVES {BUFGCE} CONFIG.CLKOUT6_DRIVES {BUFGCE} CONFIG.CLKOUT7_DRIVES {BUFGCE} CONFIG.FEEDBACK_SOURCE {FDBK_AUTO} CONFIG.MMCM_DIVCLK_DIVIDE {10} CONFIG.MMCM_CLKFBOUT_MULT_F {60.125} CONFIG.MMCM_CLKOUT0_DIVIDE_F {9.250} CONFIG.MMCM_CLKOUT1_DIVIDE {6} CONFIG.NUM_OUT_CLKS {2} CONFIG.CLKOUT1_JITTER {676.125} CONFIG.CLKOUT1_PHASE_ERROR {871.302} CONFIG.CLKOUT2_JITTER {636.825} CONFIG.CLKOUT2_PHASE_ERROR {871.302}] [get_ips clk_generator]
+generate_target {instantiation_template} [get_files c:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_generator/clk_generator.xci]
+update_compile_order -fileset sources_1
+set_property generate_synth_checkpoint false [get_files  c:/Users/pawel/Desktop/binary_land/uec2_projekt/src/sources_1/ip/clk_generator/clk_generator.xci]
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+reset_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 4
+wait_on_run impl_1
+reset_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 4
+wait_on_run impl_1
+open_hw
+connect_hw_server -url localhost:3121
+current_hw_target [get_hw_targets */xilinx_tcf/Digilent/210183795558A]
+set_property PARAM.FREQUENCY 15000000 [get_hw_targets */xilinx_tcf/Digilent/210183795558A]
+open_hw_target
+set_property PROGRAM.FILE {C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.runs/impl_1/main.bit} [get_hw_devices xc7a35t_0]
+current_hw_device [get_hw_devices xc7a35t_0]
+refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a35t_0] 0]
+set_property PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property FULL_PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property PROGRAM.FILE {C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.runs/impl_1/main.bit} [get_hw_devices xc7a35t_0]
+program_hw_devices [get_hw_devices xc7a35t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a35t_0] 0]
