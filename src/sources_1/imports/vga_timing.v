@@ -50,8 +50,7 @@ module vga_timing (
     assign vblnk = (vcount >= VER_ADDR_TIME);
     assign hsync = ((hcount >= HOR_SYNC_START) && (hcount < (HOR_SYNC_START + HOR_SYNC_TIME)));
     assign vsync = ((vcount >= VER_SYNC_START) && (vcount < (VER_SYNC_START + VER_SYNC_TIME)));
-  
-  
+
     always @(posedge pclk or posedge rst)
     if(rst)
     begin
@@ -71,6 +70,5 @@ module vga_timing (
         else
             hcount <= hcount + 1;
     end
-    
-    
+     
 endmodule

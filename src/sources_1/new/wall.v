@@ -26,23 +26,19 @@ module wall(
     input wire [11:0] hero_x_pos,
     input wire [11:0] hero_y_pos,
     
-    output reg collision,
+    output reg [3:0]collision,
     //block
     output reg [11:0] block_x_pos,
-    output reg [11:0] block_y_pos
-    //input wire [11:0] rgb_in,      
-                                      
-    //output reg [11:0] rgb_out    
+    output reg [11:0] block_y_pos   
     //input rom
     );
     
     localparam SQUARE_SIDE = 60;
     
-    reg collision_nxt;
+    reg [3:0]collision_nxt;
     reg [14:0]rom[9:0];
-    reg hcounter, hcounter_nxt, vcounter, vcounter_nxt;
+    reg [0:5] hcounter, hcounter_nxt, vcounter, vcounter_nxt;
     reg [11:0] block_x_pos_nxt, block_y_pos_nxt;
-    reg [11:0] rgb_out_nxt;
     
     initial
     begin
@@ -61,7 +57,6 @@ module wall(
             vcounter <= 0;
             block_x_pos <= 0;
             block_y_pos <= 0;
-            //rgb_out    <= 0;
         end
         else
         begin
@@ -70,16 +65,23 @@ module wall(
             vcounter <= vcounter_nxt;
             block_x_pos <= block_x_pos_nxt;
             block_y_pos <= block_y_pos_nxt;
-            //rgb_out    <= rgb_out_nxt; 
         end                           
     end                               
     
     always @*
     begin
-        if((hero_x_pos < block_x_pos + SQUARE_SIDE)||(hero_x_pos + SQUARE_SIDE > block_x_pos)||(hero_y_pos < block_y_pos + SQUARE_SIDE)||(hero_y_pos + SQUARE_SIDE > block_y_pos))
-            collision_nxt = 1;
+    //block_x_pos_nxt = 62+60;
+    //block_y_pos_nxt = 108+60;
+        if((hero_x_pos <= block_x_pos + SQUARE_SIDE)&&(hero_x_pos + SQUARE_SIDE >= block_x_pos)&&(hero_y_pos <= block_y_pos + SQUARE_SIDE)&&(hero_y_pos + SQUARE_SIDE >= block_y_pos))         //LEFT
+            collision_nxt = 3'b001;
+        else if(hero_x_pos + SQUARE_SIDE >= block_x_pos)    //RIGHT
+            collision_nxt = 3'b010;
+        else if(hero_y_pos <= block_y_pos + SQUARE_SIDE)    //UP
+            collision_nxt = 3'b011;
+        else if(hero_y_pos + SQUARE_SIDE >= block_y_pos)    //DOWN
+            collision_nxt = 3'b100;
         else
-            collision_nxt = 0;
+            collision_nxt = 3'b000;
         if(hcounter == 14)
         begin
             hcounter_nxt = 0;
@@ -92,12 +94,10 @@ module wall(
             hcounter_nxt = hcounter + 1;
         if(rom[hcounter][vcounter])
         begin
-            //rgb_out_nxt = 12'h6_3_0;
             block_x_pos_nxt = 62 + (SQUARE_SIDE * hcounter);
             block_y_pos_nxt = 108 + (SQUARE_SIDE * vcounter);
         end
         //else
-            //rgb_out_nxt = rgb_in;
             //block_x_pos_nxt = 
            // block_y_pos_nxt = 
     end

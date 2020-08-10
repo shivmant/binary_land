@@ -33,7 +33,8 @@ module main(
     output wire [3:0] r,
     output wire [3:0] g,
     output wire [3:0] b,
-    output wire pclk_mirror
+    output wire pclk_mirror,
+    output wire [3:0] led
     );
     
     // CLOCK
@@ -70,7 +71,7 @@ module main(
     //MODULES
     
     wire [11:0] x_pos_hero, y_pos_hero, block_x_pos, block_y_pos;
-    wire collision;
+    wire [3:0] collision, collision_holded;
     
     wire [10:0] vcount_out_timing, hcount_out_timing;
     wire vsync_out_timing, hsync_out_timing;
@@ -86,10 +87,12 @@ module main(
     wire vblnk_out_obj, hblnk_out_obj;
     wire [11:0] rgb_out_obj;
     
-//    wire [10:0] vcount_out_wall, hcount_out_wall;
-//    wire vsync_out_wall, hsync_out_wall;
-//    wire vblnk_out_wall, hblnk_out_wall;
-//    wire [11:0] rgb_out_wall;
+    wire [10:0] vcount_out_wall, hcount_out_wall;
+    wire vsync_out_wall, hsync_out_wall;
+    wire vblnk_out_wall, hblnk_out_wall;
+    wire [11:0] rgb_out_wall;
+    
+    wire [15*10-1:0] map;
     
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
@@ -121,13 +124,16 @@ module main(
     );
     
     hero_ctl my_hero_ctl (
-        .clk(pclk_div),
+        .clk(pclk),
+        .clk_div(pclk_div),
         .rst(rst),
         .up(btnUp),
         .left(btnLeft),
         .right(btnRight),
         .down(btnDown),
         .center(btnCenter),
+        .block_x_pos(block_x_pos),
+        .block_y_pos(block_y_pos),
         .collision(collision),
         .x_pos(x_pos_hero),
         .y_pos(y_pos_hero)
@@ -159,7 +165,6 @@ module main(
 //            .hero_x_pos(x_pos_hero),
 //            .hero_y_pos(y_pos_hero),
 //            .collision(collision),
-//            //.rgb_in(rgb_out_obj),
 //            .block_x_pos(block_x_pos),
 //            .block_y_pos(block_y_pos)
 //        );
@@ -168,7 +173,7 @@ module main(
 //    #(.COLOR(12'h6_3_0))
 //    block
 //        (
-//            .clk(clk),
+//            .clk(pclk_div),
 //            .rst(rst),
 //            .hcount_in(hcount_out_obj),
 //            .hsync_in(hsync_out_obj),
@@ -187,29 +192,51 @@ module main(
 //            .vblnk_out(vblnk_out_wall),
 //            .rgb_out(rgb_out_wall)
 //        );
-//    draw_object my_object_square (
-//        .clk(pclk),
-//        .rst(rst),
-//        .hcount_in(hcount_out_background),
-//        .hsync_in(hsync_out_background),
-//        .hblnk_in(hblnk_out_background),
-//        .vcount_in(vcount_out_background),
-//        .vsync_in(vsync_out_background),
-//        .vblnk_in(vblnk_out_background),
-//        .rgb_in(rgb_out_background),
-//        .hcount_out(hcount_out_obj),
-//        .hsync_out(hsync_out_obj),
-//        .hblnk_out(hblnk_out_obj),
-//        .vcount_out(vcount_out_obj),
-//        .vsync_out(vsync_out_obj),
-//        .vblnk_out(vblnk_out_obj),
-//        .rgb_out(rgb_out_obj)
-//    );
+    map_rom my_rom (
+        .clk(pclk),
+        .level(0),
+        .map(map)
+    );
+        
+    draw_area my_area (        
+        .clk(pclk),                        
+        .rst(rst),                         
+        .hcount_in(hcount_out_obj),     
+        .hsync_in(hsync_out_obj),       
+        .hblnk_in(hblnk_out_obj),       
+        .vcount_in(vcount_out_obj),     
+        .vsync_in(vsync_out_obj),       
+        .vblnk_in(vblnk_out_obj),
+        .rgb_in(rgb_out_obj),     
+        .map(map),  
+        .hero_x_pos(x_pos_hero),
+        .hero_y_pos(y_pos_hero), 
+        .hcount_out(hcount_out_wall),
+        .hsync_out(hsync_out_wall),  
+        .hblnk_out(hblnk_out_wall),  
+        .vcount_out(vcount_out_wall),
+        .vsync_out(vsync_out_wall),  
+        .vblnk_out(vblnk_out_wall),  
+        .rgb_out(rgb_out_wall),
+        .wall_x_pos(block_x_pos),
+        .wall_y_pos(block_y_pos)   
+        //.collision(collision)  
+    );
     
-    assign hs = hsync_out_obj;
-    assign vs = vsync_out_obj;
-    assign r = rgb_out_obj [11:8];
-    assign g = rgb_out_obj [7:4];
-    assign b = rgb_out_obj [3:0];
+//    holder #(.HOLD_TIME(10))
+//        collision_holder(
+//            .clk(pclk),
+//            .rst(rst),
+//            .signal_in(collision),
+//            .signal_out(collision_holded)
+//        );                                             
+    
+    assign hs = hsync_out_wall;
+    assign vs = vsync_out_wall;
+    assign r = rgb_out_wall [11:8];
+    assign g = rgb_out_wall [7:4];
+    assign b = rgb_out_wall [3:0];
+    
+    assign led = collision;
  
 endmodule
