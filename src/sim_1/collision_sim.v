@@ -23,7 +23,8 @@
 module collision_sim;
 
     reg clk;
-    wire pclk_mirror;
+    reg clk_div, right;
+    //wire pclk_mirror;
     //wire vs, hs;
     wire [10:0] vcount_in, hcount_in;
     wire vsync_in, hsync_in;
@@ -47,12 +48,12 @@ module collision_sim;
         .hsync(hsync_in),
         .hblnk(hblnk_in),
         .pclk(clk),
-        .rst(0)
+        .rst(1'b0)
     );
     
     draw_area my_area (        
-        .clk(clk),                        
-        .rst(0),                         
+        .clk(clk),                       
+        .rst(1'b0),                         
         .hcount_in(hcount_in),     
         .hsync_in(hsync_in),       
         .hblnk_in(hblnk_in),       
@@ -61,8 +62,8 @@ module collision_sim;
         .vblnk_in(vblnk_in),
         .rgb_in(12'h8_8_8),     
         .map(map),  
-        .hero_x_pos(0),
-        .hero_y_pos(0), 
+        .hero_x_pos(1'b0),
+        .hero_y_pos(1'b0), 
         .hcount_out(hcount_out),
         .hsync_out(hsync_out),  
         .hblnk_out(hblnk_out),  
@@ -77,12 +78,13 @@ module collision_sim;
     
     hero_ctl my_hero_ctl (
         .clk(clk),
-        .rst(0),
-        .up(0),
-        .left(0),
-        .right(0),
-        .down(0),
-        .center(0),
+        .clk_div(clk_div), 
+        .rst(1'b0),
+        .up(1'b0),
+        .left(1'b0),
+        .right(right),
+        .down(1'b0),
+        .center(1'b0),
         .block_x_pos(block_x_pos),
         .block_y_pos(block_y_pos),
         .collision(collision),
@@ -90,7 +92,13 @@ module collision_sim;
         .y_pos(y_pos_hero)
     );
     
-    
+//    clk_divider
+//          #(.FREQ(200))
+//           my_clk_divider(
+//            .clk100MHz(clk),
+//            .rst(0),
+//            .clk_div(clk_div)
+//          );
     
     always
     begin
@@ -100,6 +108,19 @@ module collision_sim;
         #5;
     end
     
+//always
+//    begin
+//        clk_div = 1'b0;
+//        #100000;
+//        clk_div = 1'b1;
+//        #100000;
+//    end
     
-    
+//always
+//        begin
+//            right = 1'b0;
+//            #5000000;
+//            right = 1'b1;
+//            #300000;
+//        end 
 endmodule

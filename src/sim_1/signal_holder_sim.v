@@ -24,8 +24,8 @@ module signal_holder_sim;
 
 reg clk;
 reg rst;
-reg signal_in;
-wire signal_out;
+reg [0:3] signal_in;
+wire [0:3] signal_out;
 wire test;
 
 holder #(.HOLD_TIME(0))
@@ -51,8 +51,8 @@ holder #(.HOLD_TIME(0))
     #10
     rst = 0;
     #60
-    signal_in = 1;
+    signal_in[2] = 1;
     #3
-    signal_in = 0;
+    signal_in[2] = 0;
     end  
 endmodule

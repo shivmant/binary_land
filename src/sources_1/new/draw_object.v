@@ -21,7 +21,7 @@
 
 
 module draw_object
-#(parameter COLOR = 12'h0_1_c) //BLUE
+#(parameter COLOR = 12'h0_1_c, WIDTH = 60, HEIGHT = 60) //BLUE
 (
     input wire clk,
     input wire rst,
@@ -80,7 +80,7 @@ module draw_object
             rgb_out_nxt <= BLACK; 
         else
         begin
-            if ((hcount_in >= x_pos)&(hcount_in < (x_pos + SQUARE_SIDE))&(vcount_in >= y_pos)&(vcount_in < (y_pos + SQUARE_SIDE))) rgb_out_nxt <= COLOR;
+            if ((hcount_in >= x_pos)&(hcount_in < (x_pos + WIDTH))&(vcount_in >= y_pos)&(vcount_in < (y_pos + HEIGHT))) rgb_out_nxt <= COLOR;
                     else rgb_out_nxt <= rgb_in;  
         end 
     end

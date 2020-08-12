@@ -70,7 +70,7 @@ module main(
     
     //MODULES
     
-    wire [11:0] x_pos_hero, y_pos_hero, block_x_pos, block_y_pos;
+    wire [11:0] x_pos_hero, y_pos_hero, block_x_pos, block_y_pos, attack_x_pos, attack_y_pos;
     wire [3:0] collision, collision_holded;
     
     wire [10:0] vcount_out_timing, hcount_out_timing;
@@ -82,15 +82,20 @@ module main(
     wire vblnk_out_background, hblnk_out_background;
     wire [11:0] rgb_out_background;
     
-    wire [10:0] vcount_out_obj, hcount_out_obj;
-    wire vsync_out_obj, hsync_out_obj;
-    wire vblnk_out_obj, hblnk_out_obj;
-    wire [11:0] rgb_out_obj;
-    
     wire [10:0] vcount_out_wall, hcount_out_wall;
     wire vsync_out_wall, hsync_out_wall;
     wire vblnk_out_wall, hblnk_out_wall;
     wire [11:0] rgb_out_wall;
+    
+    wire [10:0] vcount_out_hero, hcount_out_hero;
+    wire vsync_out_hero, hsync_out_hero;
+    wire vblnk_out_hero, hblnk_out_hero;
+    wire [11:0] rgb_out_hero;
+    
+    wire [10:0] vcount_out_attack, hcount_out_attack;
+    wire vsync_out_attack, hsync_out_attack;
+    wire vblnk_out_attack, hblnk_out_attack;
+    wire [11:0] rgb_out_attack;
     
     wire [15*10-1:0] map;
     
@@ -123,6 +128,36 @@ module main(
         .rgb_out(rgb_out_background)
     );
     
+    map_rom my_rom (                 
+        .clk(pclk),                  
+        .level(0),                   
+        .map(map)                    
+    );                               
+                                     
+    draw_area my_area (              
+        .clk(pclk),                  
+        .rst(rst),                   
+        .hcount_in(hcount_out_background),  
+        .hsync_in(hsync_out_background),    
+        .hblnk_in(hblnk_out_background),    
+        .vcount_in(vcount_out_background),  
+        .vsync_in(vsync_out_background),    
+        .vblnk_in(vblnk_out_background),    
+        .rgb_in(rgb_out_background),        
+        .map(map),                   
+        .hero_x_pos(x_pos_hero),     
+        .hero_y_pos(y_pos_hero),     
+        .hcount_out(hcount_out_wall),
+        .hsync_out(hsync_out_wall),  
+        .hblnk_out(hblnk_out_wall),  
+        .vcount_out(vcount_out_wall),
+        .vsync_out(vsync_out_wall),  
+        .vblnk_out(vblnk_out_wall),  
+        .rgb_out(rgb_out_wall),      
+        .wall_x_pos(block_x_pos),    
+        .wall_y_pos(block_y_pos)        
+    );                                   
+    
     hero_ctl my_hero_ctl (
         .clk(pclk),
         .clk_div(pclk_div),
@@ -137,105 +172,57 @@ module main(
         .collision(collision),
         .x_pos(x_pos_hero),
         .y_pos(y_pos_hero)
+//        .x_pos_attack(attack_x_pos),
+//        .y_pos_attack(attack_y_pos)
     );
+    
     draw_object hero (
         .clk(pclk),
         .rst(rst),
-        .hcount_in(hcount_out_background),
-        .hsync_in(hsync_out_background),
-        .hblnk_in(hblnk_out_background),
-        .vcount_in(vcount_out_background),
-        .vsync_in(vsync_out_background),
-        .vblnk_in(vblnk_out_background),
-        .rgb_in(rgb_out_background),
+        .hcount_in(hcount_out_wall),
+        .hsync_in(hsync_out_wall),
+        .hblnk_in(hblnk_out_wall),
+        .vcount_in(vcount_out_wall),
+        .vsync_in(vsync_out_wall),
+        .vblnk_in(vblnk_out_wall),
+        .rgb_in(rgb_out_wall),
         .x_pos(x_pos_hero),
         .y_pos(y_pos_hero),
-        .hcount_out(hcount_out_obj),
-        .hsync_out(hsync_out_obj),
-        .hblnk_out(hblnk_out_obj),
-        .vcount_out(vcount_out_obj),
-        .vsync_out(vsync_out_obj),
-        .vblnk_out(vblnk_out_obj),
-        .rgb_out(rgb_out_obj)
+        .hcount_out(hcount_out_hero),
+        .hsync_out(hsync_out_hero),
+        .hblnk_out(hblnk_out_hero),
+        .vcount_out(vcount_out_hero),
+        .vsync_out(vsync_out_hero),
+        .vblnk_out(vblnk_out_hero),
+        .rgb_out(rgb_out_hero)
     );
     
-//    wall wall_ctl (
-//            .clk(pclk),
-//            .rst(rst),
-//            .hero_x_pos(x_pos_hero),
-//            .hero_y_pos(y_pos_hero),
-//            .collision(collision),
-//            .block_x_pos(block_x_pos),
-//            .block_y_pos(block_y_pos)
-//        );
-        
-//    draw_object
-//    #(.COLOR(12'h6_3_0))
-//    block
-//        (
-//            .clk(pclk_div),
-//            .rst(rst),
-//            .hcount_in(hcount_out_obj),
-//            .hsync_in(hsync_out_obj),
-//            .hblnk_in(hblnk_out_obj),
-//            .vcount_in(vcount_out_obj),
-//            .vsync_in(vsync_out_obj),
-//            .vblnk_in(vblnk_out_obj),
-//            .rgb_in(rgb_out_obj),
-//            .x_pos(block_x_pos),
-//            .y_pos(block_y_pos),
-//            .hcount_out(hcount_out_wall),
-//            .hsync_out(hsync_out_wall),
-//            .hblnk_out(hblnk_out_wall),
-//            .vcount_out(vcount_out_wall),
-//            .vsync_out(vsync_out_wall),
-//            .vblnk_out(vblnk_out_wall),
-//            .rgb_out(rgb_out_wall)
-//        );
-    map_rom my_rom (
-        .clk(pclk),
-        .level(0),
-        .map(map)
-    );
-        
-    draw_area my_area (        
-        .clk(pclk),                        
-        .rst(rst),                         
-        .hcount_in(hcount_out_obj),     
-        .hsync_in(hsync_out_obj),       
-        .hblnk_in(hblnk_out_obj),       
-        .vcount_in(vcount_out_obj),     
-        .vsync_in(vsync_out_obj),       
-        .vblnk_in(vblnk_out_obj),
-        .rgb_in(rgb_out_obj),     
-        .map(map),  
-        .hero_x_pos(x_pos_hero),
-        .hero_y_pos(y_pos_hero), 
-        .hcount_out(hcount_out_wall),
-        .hsync_out(hsync_out_wall),  
-        .hblnk_out(hblnk_out_wall),  
-        .vcount_out(vcount_out_wall),
-        .vsync_out(vsync_out_wall),  
-        .vblnk_out(vblnk_out_wall),  
-        .rgb_out(rgb_out_wall),
-        .wall_x_pos(block_x_pos),
-        .wall_y_pos(block_y_pos)   
-        //.collision(collision)  
-    );
+//    draw_object #(.COLOR(12'hf_f_f),.WIDTH(20),.HEIGHT(40)) attack (
+//        .clk(pclk),
+//        .rst(rst),
+//        .hcount_in(hcount_out_hero),
+//        .hsync_in(hsync_out_hero),
+//        .hblnk_in(hblnk_out_hero),
+//        .vcount_in(vcount_out_hero),
+//        .vsync_in(vsync_out_hero),
+//        .vblnk_in(vblnk_out_hero),
+//        .rgb_in(rgb_out_hero),
+//        .x_pos(attack_x_pos),
+//        .y_pos(attack_y_pos),
+//        .hcount_out(hcount_out_attack),
+//        .hsync_out(hsync_out_attack),
+//        .hblnk_out(hblnk_out_attack),
+//        .vcount_out(vcount_out_attack),
+//        .vsync_out(vsync_out_attack),
+//        .vblnk_out(vblnk_out_attack),
+//        .rgb_out(rgb_out_attack)
+//    );
     
-//    holder #(.HOLD_TIME(10))
-//        collision_holder(
-//            .clk(pclk),
-//            .rst(rst),
-//            .signal_in(collision),
-//            .signal_out(collision_holded)
-//        );                                             
-    
-    assign hs = hsync_out_wall;
-    assign vs = vsync_out_wall;
-    assign r = rgb_out_wall [11:8];
-    assign g = rgb_out_wall [7:4];
-    assign b = rgb_out_wall [3:0];
+    assign hs = hsync_out_hero;
+    assign vs = vsync_out_hero;
+    assign r = rgb_out_hero [11:8];
+    assign g = rgb_out_hero [7:4];
+    assign b = rgb_out_hero [3:0];
     
     assign led = collision;
  
