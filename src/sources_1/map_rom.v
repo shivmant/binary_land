@@ -22,13 +22,13 @@
 
 module map_rom(
     input wire clk,
-    input wire [1:0] level,
-    output reg [15*10-1:0] map
+    input wire [3:0] level,
+    output reg [599:0] map
     );
     
-    reg [149:0] rom [2:0];
+    reg [599:0] rom [2:0];
     
-    initial $readmemb("map.mem", rom);
+    initial $readmemh("map.mem", rom);
     always @(posedge clk)
         map <= rom[level];
     

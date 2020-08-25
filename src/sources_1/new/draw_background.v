@@ -69,7 +69,7 @@ module draw_background(
         end
     end    
         
-    always @(*)
+    always @*
     begin
         if (vblnk_in || hblnk_in)
             rgb_out_nxt = BLACK; 
