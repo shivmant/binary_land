@@ -1,0 +1,4 @@
+# A .gitignore for binary_land uec2 project.
+/backup/*
+/doc/*
+/vivado/*
