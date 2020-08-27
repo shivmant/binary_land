@@ -22,54 +22,46 @@
 module level_management_unit(                             
     input wire clk,                                 
     input wire rst,                                 
-    input wire [10:0] points,                       
+    input wire [23:0] score,                       
     input wire [11:0] hero_x_pos,                   
     input wire [11:0] hero_y_pos,                   
     output reg [3:0] level,                         
-    output reg hero_rst                             
-    );                                              
-    localparam IDLE = 1'b0,                         
-               CHANGE = 1'b1;                       
-                                                    
-    //reg [2:0] state, state_nxt;                   
+    output reg hero_rst,
+    output reg [23:0] score_req                            
+    );                                                                     
+                                                                      
     reg [3:0] level_nxt;                            
-    reg hero_rst_nxt;                               
+    reg hero_rst_nxt; 
+    reg [23:0] score_req_nxt;                              
                                                     
     always @(posedge clk or posedge rst)            
         if(rst)                                     
         begin                                       
             level <= 0;                             
-            hero_rst <= 0;                          
-            //state <= IDLE;                        
+            hero_rst <= 0;
+            score_req <= 1000;                                               
         end                                         
         else                                        
         begin                                       
             level <= level_nxt;                     
-            hero_rst <= hero_rst_nxt;               
-            //state <= state_nxt;                   
+            hero_rst <= hero_rst_nxt; 
+            score_req <= score_req_nxt;                                  
         end                                         
                                                     
     always @(*)                                     
     begin                                           
-        if((hero_x_pos == 481)&&(hero_y_pos == 108))
+        if((hero_x_pos == 482)&&(hero_y_pos == 108)&&(score >= score_req))
         begin                                       
             level_nxt = level + 1;                  
-            hero_rst_nxt = 1;                       
+            hero_rst_nxt = 1;
+            score_req_nxt = score + 1000;                         
         end                                         
         else                                        
-        begin                                       
+        begin
+            score_req_nxt = score_req;                                      
             level_nxt = level;                      
             hero_rst_nxt = 0;                       
-        end                                         
-//        case(state)                               
-//            IDLE:                                 
-//            begin                                 
-//            end                                   
-//            CHANGE:                               
-//            begin                                 
-                                                    
-//            end                                   
-//        endcase                                   
-    end                                             
+        end                                                              
+    end                                        
                                                     
 endmodule                                           

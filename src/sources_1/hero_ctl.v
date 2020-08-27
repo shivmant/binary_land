@@ -64,15 +64,15 @@ module hero_ctl(
 //    reg [11:0] x_pos_attack_temp, y_pos_attack_temp, x_pos_attack_temp_nxt, y_pos_attack_temp_nxt;
     
     
-    initial
-    begin
-        x_pos = 481;//512;
-        y_pos = 648;//300;
-        //x_pos_nxt = 182;//512;182
-        //y_pos_nxt = 230;//300;230
-        //state = IDLE;
-        picked_nxt = 0;
-    end
+//    initial
+//    begin
+//        x_pos = 482;//512;
+//        y_pos = 648;//300;
+//        //x_pos_nxt = 182;//512;182
+//        //y_pos_nxt = 230;//300;230
+//        //state = IDLE;
+//        picked_nxt = 0;
+//    end
     
     always @(posedge clk or posedge rst)
         if(rst)
@@ -89,7 +89,7 @@ module hero_ctl(
     always @(posedge clk_div or posedge rst)
         if(rst)
         begin
-            x_pos <= 481;
+            x_pos <= 482;
             y_pos <= 648;
             state <= IDLE;
 //            x_pos_attack <= 0;

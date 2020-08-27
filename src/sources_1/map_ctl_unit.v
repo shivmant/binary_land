@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 30.07.2020 14:33:57
+// Create Date: 25.08.2020 18:10:46
 // Design Name: 
-// Module Name: draw_area
+// Module Name: map_ctl_unit
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,8 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module draw_area(
-    input wire clk,
+module map_ctl_unit(
+input wire clk,
     input wire rst,
     input wire [10:0] hcount_in,
     input wire hsync_in,
@@ -53,16 +53,14 @@ module draw_area(
     reg [11:0] wall_x_pos_nxt, wall_y_pos_nxt;
     reg [149:0] picked, picked_nxt;
     wire [3:0] type;
-    reg [11:0] pickup_x_pos, pickup_y_pos, pickup_x_pos_nxt, pickup_y_pos_nxt;
     reg [3:0] detection, detection_nxt;
     reg [23:0] score_out_nxt;
+    reg [1:0] state, state_nxt;
     
     localparam BLANK = 4'b0000,      
                WALL = 4'b0001,                     
                COIN = 4'b0010,
-               POWERUP = 4'b0011,
-               IDLE = 3'b000,
-               PICK_UP =3'b001;
+               POWERUP = 4'b0011;
                    
     localparam SQUARE_SIDE = 60;
     
@@ -71,11 +69,16 @@ module draw_area(
                BROWN = 12'h6_3_0,
                BLUE = 12'h0_1_c,
                RED = 12'hf_0_0;
-     initial
-     begin
-        picked_nxt = 0;
-        score_out = 0;
-     end   
+               
+     localparam IDLE = 2'b00,      
+                PICK_UP = 2'b01,                     
+                COLLISION = 2'b10,
+                INIT = 2'b11;       
+//     initial
+//     begin
+//        picked_nxt = 0;
+//        score_out = 0;
+//     end   
     always @(posedge clk, posedge rst)
     begin
         if(rst)
@@ -91,10 +94,9 @@ module draw_area(
             block_y_pos <= 0;
             wall_x_pos <= 0;
             wall_y_pos <= 0;
-            pickup_x_pos <= 0;                     
-            pickup_y_pos <= 0;
             picked <= 0;
             detection <= 0;
+            state <= INIT;
             //score_out <= 0;
         end
         else
@@ -110,10 +112,9 @@ module draw_area(
             block_y_pos <= block_y_pos_nxt;
             wall_x_pos <= wall_x_pos_nxt;
             wall_y_pos <= wall_y_pos_nxt;
-            pickup_x_pos <= pickup_x_pos_nxt;                     
-            pickup_y_pos <= pickup_y_pos_nxt;
             picked <= picked_nxt;
             detection <= detection_nxt;
+            state <= state_nxt;
             score_out <= score_out_nxt;
         end
     end    
@@ -148,59 +149,66 @@ module draw_area(
         begin
             block_x_pos_nxt = 7;    //always map[block_x_pos + block_y_pos*15] = 0
             block_y_pos_nxt = 0;
-        end                                             
-//        if (vblnk_in || hblnk_in)
-//            rgb_out_nxt = BLACK; 
-//        else
-//        begin                                                                                                                                 
-            case(type)
-                BLANK:
-                begin
+        end                                                                                                                                                                          
+        case(type)
+            BLANK:
+            begin
+                rgb_out_nxt = rgb_in;
+            end
+            WALL:
+            begin
+                rgb_out_nxt = BROWN;
+                wall_x_pos_nxt = block_x_pos*60+61;
+                wall_y_pos_nxt = block_y_pos*60+108;
+            end
+            COIN:
+            begin
+                if((vcount_in >= block_y_pos*60+108 + 15 && vcount_in < block_y_pos*60+108 + 45) && (hcount_in >= block_x_pos*60+61 + 15 && hcount_in < block_x_pos*60+61 + 45)&&!picked[block_x_pos + block_y_pos*15])
+                    rgb_out_nxt = 12'hf_f_f;
+                else
                     rgb_out_nxt = rgb_in;
-                end
-                WALL:
-                begin
-                    rgb_out_nxt = BROWN;
-                    wall_x_pos_nxt = block_x_pos*60+61;
-                    wall_y_pos_nxt = block_y_pos*60+108;
-                end
-                COIN:
-                begin
-                    if((vcount_in >= block_y_pos*60+108 + 15 && vcount_in < block_y_pos*60+108 + 45) && (hcount_in >= block_x_pos*60+61 + 15 && hcount_in < block_x_pos*60+61 + 45)&&!picked[block_x_pos + block_y_pos*15])
-                        rgb_out_nxt = 12'hf_f_f;
-                    else
-                        rgb_out_nxt = rgb_in;
-                end
-                POWERUP:
-                begin
-                    if((vcount_in >= block_y_pos*60+108 + 15 && vcount_in < block_y_pos*60+108 + 45) && (hcount_in >= block_x_pos*60+61 + 15 && hcount_in < block_x_pos*60+61 + 45)&&!picked[block_x_pos + block_y_pos*15])
-                        rgb_out_nxt = 12'h0_f_f;
-                    else
-                        rgb_out_nxt = rgb_in;
-                end
-            endcase
-        if(type == BLANK || type == WALL)
-        begin
-            pickup_x_pos_nxt = 7;
-            pickup_y_pos_nxt = 0;
-        end
-        else
-        begin
-            pickup_x_pos_nxt = block_x_pos*60+61;
-            pickup_y_pos_nxt = block_y_pos*60+108;
-            if((pickup_x_pos + 15 <= hero_x_pos + SQUARE_SIDE + 1)&&(pickup_x_pos + 45 - 1 > hero_x_pos - 1)&&(pickup_y_pos + 15 <= hero_y_pos + SQUARE_SIDE)&&(pickup_y_pos + 45 >=hero_y_pos)&&!picked[block_x_pos + block_y_pos*15])
-            begin                    
-                picked_nxt[block_x_pos + block_y_pos*15] = 1;   
+            end
+            POWERUP:
+            begin
+                if((vcount_in >= block_y_pos*60+108 + 15 && vcount_in < block_y_pos*60+108 + 45) && (hcount_in >= block_x_pos*60+61 + 15 && hcount_in < block_x_pos*60+61 + 45)&&!picked[block_x_pos + block_y_pos*15])
+                    rgb_out_nxt = 12'h0_f_f;
+                else
+                    rgb_out_nxt = rgb_in;
+            end
+        endcase
+        case(state)
+            INIT:
+            begin
+                picked_nxt = 0;
+            end
+            IDLE:
+            begin
+                if((block_x_pos*60+61 + 15 <= hero_x_pos + SQUARE_SIDE + 1)
+                &&(block_x_pos*60+61 + 45 - 1 > hero_x_pos - 1)
+                &&(block_y_pos*60+108 + 15 <= hero_y_pos + SQUARE_SIDE)
+                &&(block_y_pos*60+108 + 45 >=hero_y_pos)
+                &&!picked[block_x_pos + block_y_pos*15]
+                &&(type != BLANK)&&(type != WALL))
+                    state_nxt = PICK_UP;
+                else
+                    state_nxt = IDLE;
+            end
+            PICK_UP:
+            begin
+                picked_nxt[block_x_pos + block_y_pos*15] = 1;
                 case(type)
                     COIN:
                     begin
+                        score_out_nxt <= score_out + 100;       //z przypisaniem nieblokujacym nie dziala prawidlowo
                     end
                     POWERUP:
                     begin
+                        score_out_nxt <= score_out + 500;       //z przypisaniem nieblokujacym nie dziala prawidlowo
                     end
-                endcase  
-            end                                                                                               
-        end                                                                                                                                              
+                endcase
+                state_nxt = IDLE; 
+            end
+        endcase                                                                                                                                              
     end
     
     assign type[0] = map[(block_x_pos + block_y_pos*15)*4];

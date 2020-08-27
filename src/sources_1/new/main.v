@@ -102,15 +102,29 @@ module main(
     wire vblnk_out_hero, hblnk_out_hero;
     wire [11:0] rgb_out_hero;
     
+    wire [10:0] vcount_out_hero_del, hcount_out_hero_del;
+    wire vsync_out_hero_del, hsync_out_hero_del;
+    wire vblnk_out_hero_del, hblnk_out_hero_del;
+    wire [11:0] rgb_out_hero_del;
+    
     wire [10:0] vcount_out_attack, hcount_out_attack;
     wire vsync_out_attack, hsync_out_attack;
     wire vblnk_out_attack, hblnk_out_attack;
     wire [11:0] rgb_out_attack;
     
+    wire [10:0] vcount_out_score, hcount_out_score;
+    wire vsync_out_score, hsync_out_score;
+    wire vblnk_out_score, hblnk_out_score;
+    wire [11:0] rgb_out_score;
+    
     wire [599:0] map;
     wire [3:0] level;
-    wire hero_rst;
+    wire level_rst;
     wire test;
+    wire [7:0] char_pixels;
+    wire [10:0] addr_char;
+    wire [7:0] char_xy;
+    wire [23:0] score, score_req;
     
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
@@ -144,11 +158,12 @@ module main(
     level_management_unit my_level_management_unit (
         .clk(pclk),
         .rst(rst),
-        .points(0),
+        .score(score),
         .hero_x_pos(x_pos_hero),
         .hero_y_pos(y_pos_hero),
         .level(level),
-        .hero_rst(hero_rst)
+        .hero_rst(level_rst),
+        .score_req(score_req)
     );
     
     draw_object #(.COLOR(12'hf_0_0)) goal (
@@ -161,7 +176,7 @@ module main(
             .vsync_in(vsync_out_background),
             .vblnk_in(vblnk_out_background),
             .rgb_in(rgb_out_background),
-            .x_pos(481),
+            .x_pos(482),
             .y_pos(108),
             .hcount_out(hcount_out_goal),
             .hsync_out(hsync_out_goal),
@@ -178,9 +193,9 @@ module main(
         .map(map)                    
     );                               
                                      
-    draw_area my_area (              
+    map_ctl_unit my_area (              
         .clk(pclk),                  
-        .rst(rst),                   
+        .rst(rst|level_rst),                   
         .hcount_in(hcount_out_goal),  
         .hsync_in(hsync_out_goal),    
         .hblnk_in(hblnk_out_goal),    
@@ -200,7 +215,8 @@ module main(
         .rgb_out(rgb_out_pickup),      
         .wall_x_pos(block_x_pos),    
         .wall_y_pos(block_y_pos), 
-        .collision(collision)       
+        .collision(collision),
+        .score_out(score) 
     );  
     
 //    pickups_rom pickup_rom (
@@ -235,7 +251,7 @@ module main(
     hero_ctl my_hero_ctl (
         .clk(pclk),
         .clk_div(pclk_div),
-        .rst(rst|hero_rst),
+        .rst(rst|level_rst),
         .up(btnUp),
         .left(btnLeft),
         .right(btnRight),
@@ -291,12 +307,58 @@ module main(
 //        .vblnk_out(vblnk_out_attack),
 //        .rgb_out(rgb_out_attack)
 //    );
+    delay
+    #(.WIDTH(24),.CLK_DEL(1))
+    char_delay (
+      .clk(pclk),
+      .rst(rst),
+      .din({hcount_out_hero, vcount_out_hero, hsync_out_hero, vsync_out_hero}),
+      .dout({hcount_out_hero_del, vcount_out_hero_del, hsync_out_hero_del, vsync_out_hero_del})
+    );
     
-    assign hs = hsync_out_hero;
-    assign vs = vsync_out_hero;
-    assign r = rgb_out_hero [11:8];
-    assign g = rgb_out_hero [7:4];
-    assign b = rgb_out_hero [3:0];
+    char_display 
+    #(.X_POS(0), .Y_POS(0))
+    score_display (
+        .pclk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_hero_del),
+        .hsync_in(hsync_out_hero_del),
+        .hblnk_in(hblnk_out_hero),
+        .vcount_in(vcount_out_hero_del),
+        .vsync_in(vsync_out_hero_del),
+        .vblnk_in(vblnk_out_hero),
+        .rgb_in(rgb_out_hero),
+        .char_pixels(char_pixels),
+        .hcount_out(hcount_out_score),
+        .hsync_out(hsync_out_score),
+        .hblnk_out(hblnk_out_score),
+        .vcount_out(vcount_out_score),
+        .vsync_out(vsync_out_score),
+        .vblnk_out(vblnk_out_score),
+        .rgb_out(rgb_out_score),
+        .char_xy(char_xy),
+        .char_line(addr_char[3:0])
+    );
+  
+    font_rom my_font_rom (
+        .clk(pclk),
+        .addr(addr_char),
+        .char_line_pixels(char_pixels)
+    );
+    
+    info_panel my_panel (
+        .clk(pclk),
+        .char_xy(char_xy),
+        .score(score),
+        .score_req(score_req),
+        .char_code(addr_char[10:4])
+    );
+    
+    assign hs = hsync_out_score;
+    assign vs = vsync_out_score;
+    assign r = rgb_out_score [11:8];
+    assign g = rgb_out_score [7:4];
+    assign b = rgb_out_score [3:0];
     
     assign led[0] = test;
  
