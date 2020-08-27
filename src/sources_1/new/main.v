@@ -199,7 +199,7 @@ module main(
         .map(map)                    
     );                               
                                      
-    map_ctl_unit my_map_ctl (              
+    map_ctl_unit my_area (              
         .clk(pclk),                  
         .rst(rst|level_rst),                   
         .hcount_in(hcount_out_goal),  

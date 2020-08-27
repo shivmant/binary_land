@@ -39,7 +39,7 @@ module level_management_unit(
         begin                                       
             level <= 0;                             
             hero_rst <= 0;
-            score_req <= score + 1000;                                               
+            score_req <= 1000;                                               
         end                                         
         else                                        
         begin                                       

@@ -222,11 +222,11 @@ input wire clk,
                 case(type)
                     COIN:
                     begin
-                        score_out_nxt = score_out + 100;       //z przypisaniem nieblokujacym nie dziala prawidlowo
+                        score_out_nxt = score_out + 100;
                     end
                     POWERUP:
                     begin
-                        score_out_nxt = score_out + 500;       //z przypisaniem nieblokujacym nie dziala prawidlowo
+                        score_out_nxt = score_out + 500;
                     end
                 endcase
                 state_nxt = IDLE; 
