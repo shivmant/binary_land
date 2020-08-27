@@ -23,8 +23,8 @@ module level_management_unit(
     input wire clk,                                 
     input wire rst,                                 
     input wire [23:0] score,                       
-    input wire [11:0] hero_x_pos,                   
-    input wire [11:0] hero_y_pos,                   
+    input wire [23:0] hero_x_pos,                   
+    input wire [23:0] hero_y_pos,                   
     output reg [3:0] level,                         
     output reg hero_rst,
     output reg [23:0] score_req                            
@@ -39,7 +39,7 @@ module level_management_unit(
         begin                                       
             level <= 0;                             
             hero_rst <= 0;
-            score_req <= 1000;                                               
+            score_req <= score + 1000;                                               
         end                                         
         else                                        
         begin                                       
@@ -50,7 +50,7 @@ module level_management_unit(
                                                     
     always @(*)                                     
     begin                                           
-        if((hero_x_pos == 482)&&(hero_y_pos == 108)&&(score >= score_req))
+        if((hero_x_pos[11:0] == 482)&&(hero_y_pos[11:0] == 108)&&(hero_x_pos[23:12] == 482)&&(hero_y_pos[23:12] == 108)&&(score >= score_req))
         begin                                       
             level_nxt = level + 1;                  
             hero_rst_nxt = 1;

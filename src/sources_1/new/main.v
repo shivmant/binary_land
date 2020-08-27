@@ -70,8 +70,9 @@ module main(
     
     //MODULES
     
-    wire [11:0] x_pos_hero, y_pos_hero, block_x_pos, block_y_pos, attack_x_pos, attack_y_pos;
-    wire [3:0] collision, collision_holded;
+    wire [11:0] block_x_pos, block_y_pos, attack_x_pos, attack_y_pos;
+    wire [23:0] x_pos_hero, y_pos_hero;
+    wire [7:0] collision, collision_holded;
     
     wire [10:0] vcount_out_timing, hcount_out_timing;
     wire vsync_out_timing, hsync_out_timing;
@@ -101,6 +102,11 @@ module main(
     wire vsync_out_hero, hsync_out_hero;
     wire vblnk_out_hero, hblnk_out_hero;
     wire [11:0] rgb_out_hero;
+    
+    wire [10:0] vcount_out_hero_mirror, hcount_out_hero_mirror;
+    wire vsync_out_hero_mirror, hsync_out_hero_mirror;
+    wire vblnk_out_hero_mirror, hblnk_out_hero_mirror;
+    wire [11:0] rgb_out_hero_mirror;
     
     wire [10:0] vcount_out_hero_del, hcount_out_hero_del;
     wire vsync_out_hero_del, hsync_out_hero_del;
@@ -193,7 +199,7 @@ module main(
         .map(map)                    
     );                               
                                      
-    map_ctl_unit my_area (              
+    map_ctl_unit my_map_ctl (              
         .clk(pclk),                  
         .rst(rst|level_rst),                   
         .hcount_in(hcount_out_goal),  
@@ -217,36 +223,7 @@ module main(
         .wall_y_pos(block_y_pos), 
         .collision(collision),
         .score_out(score) 
-    );  
-    
-//    pickups_rom pickup_rom (
-//        .clk(pclk),
-//        .level(level),
-//        .pickup(pickup)
-//    );
-    
-//    pickups_management_unit my_pickups_unit (              
-//        .clk(pclk),                  
-//        .rst(rst),                   
-//        .hcount_in(hcount_out_wall),  
-//        .hsync_in(hsync_out_wall),    
-//        .hblnk_in(hblnk_out_wall),    
-//        .vcount_in(vcount_out_wall),  
-//        .vsync_in(vsync_out_wall),    
-//        .vblnk_in(vblnk_out_wall),    
-//        .rgb_in(rgb_out_wall),        
-//        .hero_x_pos(x_pos_hero),  
-//        .hero_y_pos(y_pos_hero),
-//        .pickup(pickup),               
-//        .hcount_out(hcount_out_pickup),
-//        .hsync_out(hsync_out_pickup),  
-//        .hblnk_out(hblnk_out_pickup),  
-//        .vcount_out(vcount_out_pickup),
-//        .vsync_out(vsync_out_pickup),  
-//        .vblnk_out(vblnk_out_pickup),  
-//        .rgb_out(rgb_out_pickup),
-//        .test(test)
-//    );                                     
+    );                                 
     
     hero_ctl my_hero_ctl (
         .clk(pclk),
@@ -257,8 +234,6 @@ module main(
         .right(btnRight),
         .down(btnDown),
         .center(btnCenter),
-        .block_x_pos(block_x_pos),
-        .block_y_pos(block_y_pos),
         .collision(collision),
         .x_pos(x_pos_hero),
         .y_pos(y_pos_hero)
@@ -266,7 +241,8 @@ module main(
 //        .y_pos_attack(attack_y_pos)
     );
     
-    draw_object hero (
+    draw_object #(.COLOR(12'hf_0_f))
+    hero_mirror (
         .clk(pclk),
         .rst(rst),
         .hcount_in(hcount_out_pickup),
@@ -276,8 +252,30 @@ module main(
         .vsync_in(vsync_out_pickup),
         .vblnk_in(vblnk_out_pickup),
         .rgb_in(rgb_out_pickup),
-        .x_pos(x_pos_hero),
-        .y_pos(y_pos_hero),
+        .x_pos(x_pos_hero[23:12]),
+        .y_pos(y_pos_hero[23:12]),
+        .hcount_out(hcount_out_hero_mirror),
+        .hsync_out(hsync_out_hero_mirror),
+        .hblnk_out(hblnk_out_hero_mirror),
+        .vcount_out(vcount_out_hero_mirror),
+        .vsync_out(vsync_out_hero_mirror),
+        .vblnk_out(vblnk_out_hero_mirror),
+        .rgb_out(rgb_out_hero_mirror)
+    );
+    
+    draw_object #(.COLOR(12'h0_1_c))
+    hero (
+        .clk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_hero_mirror),
+        .hsync_in(hsync_out_hero_mirror),
+        .hblnk_in(hblnk_out_hero_mirror),
+        .vcount_in(vcount_out_hero_mirror),
+        .vsync_in(vsync_out_hero_mirror),
+        .vblnk_in(vblnk_out_hero_mirror),
+        .rgb_in(rgb_out_hero_mirror),
+        .x_pos(x_pos_hero[11:0]),
+        .y_pos(y_pos_hero[11:0]),
         .hcount_out(hcount_out_hero),
         .hsync_out(hsync_out_hero),
         .hblnk_out(hblnk_out_hero),
