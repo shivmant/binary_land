@@ -97,7 +97,7 @@ wire clk_in2_clk_generator;
 
   wire        clk65MHz_clk_generator;
   wire        clk100MHz_clk_generator;
-  wire        clk_out3_clk_generator;
+  wire        clk100MHz_clk_generator;
   wire        clk_out4_clk_generator;
   wire        clk_out5_clk_generator;
   wire        clk_out6_clk_generator;

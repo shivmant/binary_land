@@ -21,7 +21,6 @@
 
 
 module info_panel(
-    input wire clk,
     input wire [7:0] char_xy,
     input wire [23:0] score,
     input wire [23:0] score_req,
@@ -83,6 +82,7 @@ module info_panel(
             8'h2d: char_code = 7'h00; // 
             8'h2e: char_code = 7'h00; // 
             8'h2f: char_code = 7'h00; // 
+            default: char_code = 7'h00;
         endcase
     
     bin2bcd score_bin2bcd

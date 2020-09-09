@@ -25,7 +25,7 @@ module level_management_unit(
     input wire [23:0] score,                       
     input wire [23:0] hero_x_pos,                   
     input wire [23:0] hero_y_pos,                   
-    output reg [3:0] level,                         
+    output reg [9:0] level,                         
     output reg hero_rst,
     output reg [23:0] score_req                            
     );                                                                     

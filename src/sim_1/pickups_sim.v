@@ -51,27 +51,6 @@ vga_timing my_vga_timing (
     .rst(1'b0)
 );
 
-    pickups_management_unit my_pickups_unit (              
-        .clk(clk),                  
-        .rst(1'b0),                   
-        .hcount_in(hcount_in),  
-        .hsync_in(hsync_in),    
-        .hblnk_in(hblnk_in),    
-        .vcount_in(vcount_in),  
-        .vsync_in(vsync_in),    
-        .vblnk_in(vblnk_in),    
-        .rgb_in(12'h000),        
-        .hero_x_pos(12'h000),  
-        .hero_y_pos(12'h000),               
-        .hcount_out(hcount_out),
-        .hsync_out(hsync_out),  
-        .hblnk_out(hblnk_out),  
-        .vcount_out(vcount_out),
-        .vsync_out(vsync_out),  
-        .vblnk_out(vblnk_out),  
-        .rgb_out(rgb_out)
-    );  
-
 //hero_ctl my_hero_ctl (
 //    .clk(clk),
 //    .clk_div(clk_div), 

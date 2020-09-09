@@ -21,26 +21,26 @@
 
 
 module main(
-    input wire clk,
-    input wire rst,
-    input wire btnCenter,
-    input wire btnUp,
-    input wire btnLeft,
-    input wire btnRight,
-    input wire btnDown,
+    input  wire clk,
+    input  wire rst,
+    input  wire btnCenter,
+    input  wire btnUp,
+    input  wire btnLeft,
+    input  wire btnRight,
+    input  wire btnDown,
     output wire vs,
     output wire hs,
     output wire [3:0] r,
     output wire [3:0] g,
     output wire [3:0] b,
     output wire pclk_mirror,
-    output wire [3:0] led
+    output wire [15:0] led
     );
     
     // CLOCK
     
     wire locked;
-    wire pclk, clk100MHz, pclk_div;
+    wire pclk, clk100MHz, clk50MHz, pclk_div;
     
     ODDR pclk_oddr (
         .Q(pclk_mirror),
@@ -61,7 +61,7 @@ module main(
     );
     
     clk_divider
-      #(.FREQ(200))
+      #(.FREQ(150))
        my_clk_divider(
         .clk100MHz(clk100MHz),
         .rst(rst),
@@ -70,9 +70,10 @@ module main(
     
     //MODULES
     
-    wire [11:0] block_x_pos, block_y_pos, attack_x_pos, attack_y_pos;
+    wire [11:0] x_pos_enemy, y_pos_enemy, attack_x_pos, attack_y_pos, x_pos_wall, y_pos_wall;
     wire [23:0] x_pos_hero, y_pos_hero;
-    wire [7:0] collision, collision_holded;
+    wire [7:0] collision;
+    wire player_collision;
     
     wire [10:0] vcount_out_timing, hcount_out_timing;
     wire vsync_out_timing, hsync_out_timing;
@@ -108,6 +109,11 @@ module main(
     wire vblnk_out_hero_mirror, hblnk_out_hero_mirror;
     wire [11:0] rgb_out_hero_mirror;
     
+    wire [10:0] vcount_out_enemy, hcount_out_enemy;
+    wire vsync_out_enemy, hsync_out_enemy;
+    wire vblnk_out_enemy, hblnk_out_enemy;
+    wire [11:0] rgb_out_enemy;
+    
     wire [10:0] vcount_out_hero_del, hcount_out_hero_del;
     wire vsync_out_hero_del, hsync_out_hero_del;
     wire vblnk_out_hero_del, hblnk_out_hero_del;
@@ -124,14 +130,14 @@ module main(
     wire [11:0] rgb_out_score;
     
     wire [599:0] map;
-    wire [3:0] level;
+    wire [9:0] level;
     wire level_rst;
-    wire test;
+    //wire test;
     wire [7:0] char_pixels;
     wire [10:0] addr_char;
     wire [7:0] char_xy;
     wire [23:0] score, score_req;
-    
+     
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
         .vsync(vsync_out_timing),
@@ -201,7 +207,8 @@ module main(
                                      
     map_ctl_unit my_area (              
         .clk(pclk),                  
-        .rst(rst|level_rst),                   
+        .rst(rst),
+        .next_level(level_rst),                   
         .hcount_in(hcount_out_goal),  
         .hsync_in(hsync_out_goal),    
         .hblnk_in(hblnk_out_goal),    
@@ -218,16 +225,15 @@ module main(
         .vcount_out(vcount_out_pickup),
         .vsync_out(vsync_out_pickup),  
         .vblnk_out(vblnk_out_pickup),  
-        .rgb_out(rgb_out_pickup),      
-        .wall_x_pos(block_x_pos),    
-        .wall_y_pos(block_y_pos), 
+        .rgb_out(rgb_out_pickup),    
+        .wall_x_pos(x_pos_wall),  
+        .wall_y_pos(y_pos_wall),   
         .collision(collision),
         .score_out(score) 
     );                                 
     
     hero_ctl my_hero_ctl (
-        .clk(pclk),
-        .clk_div(pclk_div),
+        .clk(pclk_div),
         .rst(rst|level_rst),
         .up(btnUp),
         .left(btnLeft),
@@ -305,27 +311,63 @@ module main(
 //        .vblnk_out(vblnk_out_attack),
 //        .rgb_out(rgb_out_attack)
 //    );
-    delay
-    #(.WIDTH(24),.CLK_DEL(1))
-    char_delay (
-      .clk(pclk),
-      .rst(rst),
-      .din({hcount_out_hero, vcount_out_hero, hsync_out_hero, vsync_out_hero}),
-      .dout({hcount_out_hero_del, vcount_out_hero_del, hsync_out_hero_del, vsync_out_hero_del})
+
+    enemy_ctl_unit my_enemy_ctl (
+        .clk(pclk_div),
+        .rst(rst|level_rst),
+//        .collision(0),
+        .hero_x_pos(x_pos_hero),
+        .hero_y_pos(y_pos_hero),
+        .wall_x_pos(x_pos_wall),  
+        .wall_y_pos(y_pos_wall),
+        .x_pos(x_pos_enemy),
+        .y_pos(y_pos_enemy),
+        .player_collision(player_collision)
     );
+    
+    draw_object #(.COLOR(12'h3_0_0))
+    enemy (
+        .clk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_hero),
+        .hsync_in(hsync_out_hero),
+        .hblnk_in(hblnk_out_hero),
+        .vcount_in(vcount_out_hero),
+        .vsync_in(vsync_out_hero),
+        .vblnk_in(vblnk_out_hero),
+        .rgb_in(rgb_out_hero),
+        .x_pos(x_pos_enemy),
+        .y_pos(y_pos_enemy),
+        .hcount_out(hcount_out_enemy),
+        .hsync_out(hsync_out_enemy),
+        .hblnk_out(hblnk_out_enemy),
+        .vcount_out(vcount_out_enemy),
+        .vsync_out(vsync_out_enemy),
+        .vblnk_out(vblnk_out_enemy),
+        .rgb_out(rgb_out_enemy)
+    );
+    
+//    delay
+//    #(.WIDTH(24),.CLK_DEL(1))
+//    char_delay (
+//      .clk(pclk),
+//      .rst(rst),
+//      .din({hcount_out_enemy, vcount_out_enemy, hsync_out_enemy, vsync_out_enemy}),
+//      .dout({hcount_out_hero_del, vcount_out_hero_del, hsync_out_hero_del, vsync_out_hero_del})
+//    );
     
     char_display 
     #(.X_POS(0), .Y_POS(0))
     score_display (
         .pclk(pclk),
         .rst(rst),
-        .hcount_in(hcount_out_hero_del),
-        .hsync_in(hsync_out_hero_del),
-        .hblnk_in(hblnk_out_hero),
-        .vcount_in(vcount_out_hero_del),
-        .vsync_in(vsync_out_hero_del),
-        .vblnk_in(vblnk_out_hero),
-        .rgb_in(rgb_out_hero),
+        .hcount_in(hcount_out_enemy),
+        .hsync_in(hsync_out_enemy),
+        .hblnk_in(hblnk_out_enemy),
+        .vcount_in(vcount_out_enemy),
+        .vsync_in(vsync_out_enemy),
+        .vblnk_in(vblnk_out_enemy),
+        .rgb_in(rgb_out_enemy),
         .char_pixels(char_pixels),
         .hcount_out(hcount_out_score),
         .hsync_out(hsync_out_score),
@@ -345,7 +387,6 @@ module main(
     );
     
     info_panel my_panel (
-        .clk(pclk),
         .char_xy(char_xy),
         .score(score),
         .score_req(score_req),
@@ -358,6 +399,6 @@ module main(
     assign g = rgb_out_score [7:4];
     assign b = rgb_out_score [3:0];
     
-    assign led[0] = test;
+    //assign led[15:0] = ;//{space,up,left,right,down};
  
 endmodule

@@ -58,6 +58,7 @@ module holder
     
     always @*
     begin
+        counter_nxt = counter;
         case(state) 
             IDLE:
             begin
@@ -68,9 +69,13 @@ module holder
                     state_nxt = HOLD;
                 end
                 else
+                begin
                     state_nxt = IDLE;
+                end
             end
             HOLD:
+            begin
+                signal_out_nxt = 1;
                 if(counter == HOLD_TIME - 1)
                 begin
                     state_nxt = IDLE;
@@ -81,9 +86,9 @@ module holder
                         counter_nxt = 0;
                     else
                         counter_nxt = counter + 1;
-                    signal_out_nxt = 1;
                     state_nxt = HOLD;
                 end
+            end
         endcase
     end
     

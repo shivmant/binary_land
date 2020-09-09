@@ -21,8 +21,9 @@
 
 
 module map_ctl_unit(
-input wire clk,
+    input wire clk,
     input wire rst,
+    input wire next_level,
     input wire [10:0] hcount_in,
     input wire hsync_in,
     input wire hblnk_in,
@@ -41,7 +42,7 @@ input wire clk,
     output reg vsync_out,
     output reg vblnk_out,
     output reg [11:0] rgb_out,
-    output reg [11:0] wall_x_pos, 
+    output reg [11:0] wall_x_pos,
     output reg [11:0] wall_y_pos,
     output wire [7:0] collision,
     output reg [23:0] score_out
@@ -74,11 +75,7 @@ input wire clk,
                 PICK_UP = 2'b01,                     
                 COLLISION = 2'b10,
                 INIT = 2'b11;       
-//     initial
-//     begin
-//        picked_nxt = 0;
-//        score_out = 0;
-//     end   
+
     always @(posedge clk, posedge rst)
     begin
         if(rst)
@@ -96,8 +93,8 @@ input wire clk,
             wall_y_pos <= 0;
             picked <= 0;
             detection <= 0;
+            score_out <= 0;
             state <= INIT;
-            //score_out <= 0;
         end
         else
         begin
@@ -114,8 +111,8 @@ input wire clk,
             wall_y_pos <= wall_y_pos_nxt;
             picked <= picked_nxt;
             detection <= detection_nxt;
-            state <= state_nxt;
             score_out <= score_out_nxt;
+            state <= state_nxt;
         end
     end    
         
@@ -166,7 +163,7 @@ input wire clk,
         begin
             block_x_pos_nxt = 7;    //always map[block_x_pos + block_y_pos*15] = 0
             block_y_pos_nxt = 0;
-        end                                                                                                                                                                          
+        end                                                                                                                                                                   
         case(type)
             BLANK:
             begin
@@ -192,15 +189,21 @@ input wire clk,
                 else
                     rgb_out_nxt = rgb_in;
             end
+            default:
+                rgb_out_nxt = rgb_in;
         endcase
+        score_out_nxt = score_out;
         case(state)
             INIT:
             begin
                 picked_nxt = 0;
+                state_nxt = IDLE;
             end
             IDLE:
             begin
-                if(((block_x_pos*60+61 + 15 <= hero_x_pos[11:0] + SQUARE_SIDE + 1)
+                if(next_level)
+                    state_nxt = INIT;
+                else if(((block_x_pos*60+61 + 15 <= hero_x_pos[11:0] + SQUARE_SIDE + 1)
                 &&(block_x_pos*60+61 + 45 - 1 > hero_x_pos[11:0] - 1)
                 &&(block_y_pos*60+108 + 15 <= hero_y_pos[11:0] + SQUARE_SIDE)
                 &&(block_y_pos*60+108 + 45 >=hero_y_pos[11:0])
@@ -222,11 +225,11 @@ input wire clk,
                 case(type)
                     COIN:
                     begin
-                        score_out_nxt = score_out + 100;
+                        score_out_nxt = score_out + 200;
                     end
                     POWERUP:
                     begin
-                        score_out_nxt = score_out + 500;
+                        score_out_nxt = score_out + 1000;
                     end
                 endcase
                 state_nxt = IDLE; 
