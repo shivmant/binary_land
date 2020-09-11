@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="32" Path="C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.xpr">
+<Project Version="7" Minor="32" Path="D:/STUDIA/IV_semestr/Uklady_elektroniki_cyfrowej_II/Projekt_binary_land/uec2_projekt/vivado/binary_land.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="fb9531d572bc43ac8c2a551aae737e0c"/>
@@ -184,6 +184,13 @@
       <File Path="$PPRDIR/../src/sources_1/lfsr.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/time_counter.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>

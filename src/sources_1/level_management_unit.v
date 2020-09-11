@@ -22,17 +22,17 @@
 module level_management_unit(                             
     input wire clk,                                 
     input wire rst,                                 
-    input wire [23:0] score,                       
+    input wire [23:0] score,                  
     input wire [23:0] hero_x_pos,                   
     input wire [23:0] hero_y_pos,                   
     output reg [9:0] level,                         
     output reg hero_rst,
-    output reg [23:0] score_req                            
+    output reg [23:0] score_req                           
     );                                                                     
                                                                       
     reg [3:0] level_nxt;                            
     reg hero_rst_nxt; 
-    reg [23:0] score_req_nxt;                              
+    reg [23:0] score_req_nxt;                           
                                                     
     always @(posedge clk or posedge rst)            
         if(rst)                                     
@@ -44,7 +44,7 @@ module level_management_unit(
         else                                        
         begin                                       
             level <= level_nxt;                     
-            hero_rst <= hero_rst_nxt; 
+            hero_rst <= hero_rst_nxt;
             score_req <= score_req_nxt;                                  
         end                                         
                                                     
@@ -54,11 +54,11 @@ module level_management_unit(
         begin                                       
             level_nxt = level + 1;                  
             hero_rst_nxt = 1;
-            score_req_nxt = score + 1000;                         
+            score_req_nxt = score + 1000;                       
         end                                         
         else                                        
         begin
-            score_req_nxt = score_req;                                      
+            score_req_nxt = score_req;                                    
             level_nxt = level;                      
             hero_rst_nxt = 0;                       
         end                                                              

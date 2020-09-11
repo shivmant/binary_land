@@ -24,11 +24,13 @@ module info_panel(
     input wire [7:0] char_xy,
     input wire [23:0] score,
     input wire [23:0] score_req,
+    input wire [11:0] timer,
     output reg [6:0] char_code
     );
     
     wire [3:0] score_bcd0, score_bcd1, score_bcd2, score_bcd3, score_bcd4, score_bcd5;
-    wire [3:0] score_req_bcd0, score_req_bcd1, score_req_bcd2, score_req_bcd3, score_req_bcd4, score_req_bcd5; 
+    wire [3:0] score_req_bcd0, score_req_bcd1, score_req_bcd2, score_req_bcd3, score_req_bcd4, score_req_bcd5;
+    wire [3:0] timer_bcd0, timer_bcd1, timer_bcd2, timer_bcd3, timer_bcd4, timer_bcd5; 
     
     always @*
         case(char_xy)
@@ -66,22 +68,22 @@ module info_panel(
             8'h1e: char_code = score_req_bcd1+48; //
             8'h1f: char_code = score_req_bcd0+48; //LSB
             
-            8'h20: char_code = 7'h00; //
-            8'h21: char_code = 7'h00; //
-            8'h22: char_code = 7'h00; //
-            8'h23: char_code = 7'h00; //
-            8'h24: char_code = 7'h00; //
+            8'h20: char_code = 7'h54; //T
+            8'h21: char_code = 7'h49; //I
+            8'h22: char_code = 7'h4d; //M
+            8'h23: char_code = 7'h45; //E
+            8'h24: char_code = 7'h3a; //:
             8'h25: char_code = 7'h00; //
             8'h26: char_code = 7'h00; //
             8'h27: char_code = 7'h00; //
             8'h28: char_code = 7'h00; //
             8'h29: char_code = 7'h00; //
-            8'h2a: char_code = 7'h00; //
-            8'h2b: char_code = 7'h00; //
-            8'h2c: char_code = 7'h00; // 
-            8'h2d: char_code = 7'h00; // 
-            8'h2e: char_code = 7'h00; // 
-            8'h2f: char_code = 7'h00; // 
+            8'h2a: char_code = timer_bcd5+48; //MSB
+            8'h2b: char_code = timer_bcd4+48; //
+            8'h2c: char_code = timer_bcd3+48; // 
+            8'h2d: char_code = timer_bcd2+48; // 
+            8'h2e: char_code = timer_bcd1+48; // 
+            8'h2f: char_code = timer_bcd0+48; //LSB
             default: char_code = 7'h00;
         endcase
     
@@ -105,6 +107,17 @@ module info_panel(
         .bcd3(score_req_bcd3),
         .bcd4(score_req_bcd4),
         .bcd5(score_req_bcd5)
+    );
+    
+    bin2bcd time_bin2bcd
+    (
+        .bin (timer),
+        .bcd0(timer_bcd0),
+        .bcd1(timer_bcd1),
+        .bcd2(timer_bcd2),
+        .bcd3(timer_bcd3),
+        .bcd4(timer_bcd4),
+        .bcd5(timer_bcd5)
     );
     
 endmodule

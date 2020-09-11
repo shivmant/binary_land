@@ -40,7 +40,7 @@ module main(
     // CLOCK
     
     wire locked;
-    wire pclk, clk100MHz, clk50MHz, pclk_div;
+    wire pclk, clk100MHz, clk50MHz, pclk_div, clk1Hz;
     
     ODDR pclk_oddr (
         .Q(pclk_mirror),
@@ -67,7 +67,15 @@ module main(
         .rst(rst),
         .clk_div(pclk_div)
       );
-    
+      
+    clk_divider
+        #(.FREQ(1))
+         my_clk_divider_timer(
+          .clk100MHz(clk100MHz),
+          .rst(rst),
+          .clk_div(clk1Hz)
+        );
+      
     //MODULES
     
     wire [11:0] x_pos_enemy, y_pos_enemy, attack_x_pos, attack_y_pos, x_pos_wall, y_pos_wall;
@@ -131,12 +139,13 @@ module main(
     
     wire [599:0] map;
     wire [9:0] level;
+    wire [11:0] time_count;
     wire level_rst;
     //wire test;
     wire [7:0] char_pixels;
     wire [10:0] addr_char;
     wire [7:0] char_xy;
-    wire [23:0] score, score_req;
+    wire [23:0] score_map, score_req, score_time, score_overall;
      
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
@@ -170,7 +179,7 @@ module main(
     level_management_unit my_level_management_unit (
         .clk(pclk),
         .rst(rst),
-        .score(score),
+        .score(score_map),
         .hero_x_pos(x_pos_hero),
         .hero_y_pos(y_pos_hero),
         .level(level),
@@ -229,7 +238,7 @@ module main(
         .wall_x_pos(x_pos_wall),  
         .wall_y_pos(y_pos_wall),   
         .collision(collision),
-        .score_out(score) 
+        .score_out(score_map) 
     );                                 
     
     hero_ctl my_hero_ctl (
@@ -242,9 +251,9 @@ module main(
         .center(btnCenter),
         .collision(collision),
         .x_pos(x_pos_hero),
-        .y_pos(y_pos_hero)
-//        .x_pos_attack(attack_x_pos),
-//        .y_pos_attack(attack_y_pos)
+        .y_pos(y_pos_hero),
+        .x_pos_attack(attack_x_pos),
+        .y_pos_attack(attack_y_pos)
     );
     
     draw_object #(.COLOR(12'hf_0_f))
@@ -291,26 +300,26 @@ module main(
         .rgb_out(rgb_out_hero)
     );
     
-//    draw_object #(.COLOR(12'hf_f_f),.WIDTH(20),.HEIGHT(40)) attack (
-//        .clk(pclk),
-//        .rst(rst),
-//        .hcount_in(hcount_out_hero),
-//        .hsync_in(hsync_out_hero),
-//        .hblnk_in(hblnk_out_hero),
-//        .vcount_in(vcount_out_hero),
-//        .vsync_in(vsync_out_hero),
-//        .vblnk_in(vblnk_out_hero),
-//        .rgb_in(rgb_out_hero),
-//        .x_pos(attack_x_pos),
-//        .y_pos(attack_y_pos),
-//        .hcount_out(hcount_out_attack),
-//        .hsync_out(hsync_out_attack),
-//        .hblnk_out(hblnk_out_attack),
-//        .vcount_out(vcount_out_attack),
-//        .vsync_out(vsync_out_attack),
-//        .vblnk_out(vblnk_out_attack),
-//        .rgb_out(rgb_out_attack)
-//    );
+    draw_object #(.COLOR(12'hf_f_f),.WIDTH(40),.HEIGHT(20)) attack (
+        .clk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_hero),
+        .hsync_in(hsync_out_hero),
+        .hblnk_in(hblnk_out_hero),
+        .vcount_in(vcount_out_hero),
+        .vsync_in(vsync_out_hero),
+        .vblnk_in(vblnk_out_hero),
+        .rgb_in(rgb_out_hero),
+        .x_pos(attack_x_pos),
+        .y_pos(attack_y_pos),
+        .hcount_out(hcount_out_attack),
+        .hsync_out(hsync_out_attack),
+        .hblnk_out(hblnk_out_attack),
+        .vcount_out(vcount_out_attack),
+        .vsync_out(vsync_out_attack),
+        .vblnk_out(vblnk_out_attack),
+        .rgb_out(rgb_out_attack)
+    );
 
     enemy_ctl_unit my_enemy_ctl (
         .clk(pclk_div),
@@ -329,13 +338,13 @@ module main(
     enemy (
         .clk(pclk),
         .rst(rst),
-        .hcount_in(hcount_out_hero),
-        .hsync_in(hsync_out_hero),
-        .hblnk_in(hblnk_out_hero),
-        .vcount_in(vcount_out_hero),
-        .vsync_in(vsync_out_hero),
-        .vblnk_in(vblnk_out_hero),
-        .rgb_in(rgb_out_hero),
+        .hcount_in(hcount_out_attack),
+        .hsync_in(hsync_out_attack),
+        .hblnk_in(hblnk_out_attack),
+        .vcount_in(vcount_out_attack),
+        .vsync_in(vsync_out_attack),
+        .vblnk_in(vblnk_out_attack),
+        .rgb_in(rgb_out_attack),
         .x_pos(x_pos_enemy),
         .y_pos(y_pos_enemy),
         .hcount_out(hcount_out_enemy),
@@ -386,13 +395,25 @@ module main(
         .char_line_pixels(char_pixels)
     );
     
+    time_counter
+        #(.INIT_TIME(60))
+        my_time_counter(
+        .clk(clk1Hz),
+        .rst(rst),
+        .lvl(level),
+        .counter(time_count),
+        .score_out(score_time)
+    );
+    
     info_panel my_panel (
         .char_xy(char_xy),
-        .score(score),
+        .score(score_overall),
         .score_req(score_req),
+        .timer(time_count),
         .char_code(addr_char[10:4])
     );
     
+    assign score_overall = score_map + score_time;
     assign hs = hsync_out_score;
     assign vs = vsync_out_score;
     assign r = rgb_out_score [11:8];
