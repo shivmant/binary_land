@@ -194,6 +194,76 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/mod_m_counter.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/mod_m_counter.v"/>
+          <Attr Name="ImportTime" Val="1600097119"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_rx.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/uart_rx.v"/>
+          <Attr Name="ImportTime" Val="1600097102"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_tx.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/uart_tx.v"/>
+          <Attr Name="ImportTime" Val="1600097125"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/fifo.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/fifo.v"/>
+          <Attr Name="ImportTime" Val="1600097110"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/uart.v"/>
+          <Attr Name="ImportTime" Val="1600097107"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/debounce.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/debounce.v"/>
+          <Attr Name="ImportTime" Val="1600097113"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_communication.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="C:/Users/misdz/Desktop/uart_project/uart_communication.v"/>
+          <Attr Name="ImportTime" Val="1600097122"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/uart_decode.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="main"/>

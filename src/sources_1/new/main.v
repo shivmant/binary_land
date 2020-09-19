@@ -23,11 +23,8 @@
 module main(
     input  wire clk,
     input  wire rst,
-    input  wire btnCenter,
-    input  wire btnUp,
-    input  wire btnLeft,
-    input  wire btnRight,
-    input  wire btnDown,
+    input  wire rx,
+    output wire tx,
     output wire vs,
     output wire hs,
     output wire [3:0] r,
@@ -79,6 +76,8 @@ module main(
     //MODULES
     
     wire [11:0] x_pos_enemy, y_pos_enemy, attack_x_pos, attack_y_pos, x_pos_wall, y_pos_wall;
+    //     TEST
+    wire [11:0] horizontal_attack_x_pos, horizontal_attack_y_pos, vertical_attack_x_pos, vertical_attack_y_pos;
     wire [23:0] x_pos_hero, y_pos_hero;
     wire [7:0] collision;
     wire player_collision;
@@ -127,10 +126,20 @@ module main(
     wire vblnk_out_hero_del, hblnk_out_hero_del;
     wire [11:0] rgb_out_hero_del;
     
-    wire [10:0] vcount_out_attack, hcount_out_attack;
+    /*wire [10:0] vcount_out_attack, hcount_out_attack;
     wire vsync_out_attack, hsync_out_attack;
     wire vblnk_out_attack, hblnk_out_attack;
-    wire [11:0] rgb_out_attack;
+    wire [11:0] rgb_out_attack;*/
+    //              TEST
+    wire [10:0] vcount_out_attack_horizontal, hcount_out_attack_horizontal;
+    wire vsync_out_attack_horizontal, hsync_out_attack_horizontal;
+    wire vblnk_out_attack_horizontal, hblnk_out_attack_horizontal;
+    wire [11:0] rgb_out_attack_horizontal;
+    
+    wire [10:0] vcount_out_attack_vertical, hcount_out_attack_vertical;
+    wire vsync_out_attack_vertical, hsync_out_attack_vertical;
+    wire vblnk_out_attack_vertical, hblnk_out_attack_vertical;
+    wire [11:0] rgb_out_attack_vertical;
     
     wire [10:0] vcount_out_score, hcount_out_score;
     wire vsync_out_score, hsync_out_score;
@@ -146,6 +155,11 @@ module main(
     wire [10:0] addr_char;
     wire [7:0] char_xy;
     wire [23:0] score_map, score_req, score_time, score_overall;
+    
+    // UART
+    wire [7:0] uart_button;
+    wire rx_empty;
+    wire move_attack, move_up, move_left, move_right, move_down; 
      
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
@@ -188,25 +202,25 @@ module main(
     );
     
     draw_object #(.COLOR(12'hf_0_0)) goal (
-            .clk(pclk),
-            .rst(rst),
-            .hcount_in(hcount_out_background),
-            .hsync_in(hsync_out_background),
-            .hblnk_in(hblnk_out_background),
-            .vcount_in(vcount_out_background),
-            .vsync_in(vsync_out_background),
-            .vblnk_in(vblnk_out_background),
-            .rgb_in(rgb_out_background),
-            .x_pos(482),
-            .y_pos(108),
-            .hcount_out(hcount_out_goal),
-            .hsync_out(hsync_out_goal),
-            .hblnk_out(hblnk_out_goal),
-            .vcount_out(vcount_out_goal),
-            .vsync_out(vsync_out_goal),
-            .vblnk_out(vblnk_out_goal),
-            .rgb_out(rgb_out_goal)
-        );
+        .clk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_background),
+        .hsync_in(hsync_out_background),
+        .hblnk_in(hblnk_out_background),
+        .vcount_in(vcount_out_background),
+        .vsync_in(vsync_out_background),
+        .vblnk_in(vblnk_out_background),
+        .rgb_in(rgb_out_background),
+        .x_pos(482),
+        .y_pos(108),
+        .hcount_out(hcount_out_goal),
+        .hsync_out(hsync_out_goal),
+        .hblnk_out(hblnk_out_goal),
+        .vcount_out(vcount_out_goal),
+        .vsync_out(vsync_out_goal),
+        .vblnk_out(vblnk_out_goal),
+        .rgb_out(rgb_out_goal)
+    );
     
     map_rom my_rom (                 
         .clk(pclk),                  
@@ -244,16 +258,18 @@ module main(
     hero_ctl my_hero_ctl (
         .clk(pclk_div),
         .rst(rst|level_rst),
-        .up(btnUp),
-        .left(btnLeft),
-        .right(btnRight),
-        .down(btnDown),
-        .center(btnCenter),
+        .up(move_up),
+        .left(move_left),
+        .right(move_right),
+        .down(move_down),
+        .center(move_attack),
         .collision(collision),
         .x_pos(x_pos_hero),
         .y_pos(y_pos_hero),
-        .x_pos_attack(attack_x_pos),
-        .y_pos_attack(attack_y_pos)
+        .x_pos_attack_horizontal(horizontal_attack_x_pos),
+        .y_pos_attack_horizontal(horizontal_attack_y_pos),
+        .x_pos_attack_vertical(vertical_attack_x_pos),
+        .y_pos_attack_vertical(vertical_attack_y_pos)
     );
     
     draw_object #(.COLOR(12'hf_0_f))
@@ -300,7 +316,7 @@ module main(
         .rgb_out(rgb_out_hero)
     );
     
-    draw_object #(.COLOR(12'hf_f_f),.WIDTH(40),.HEIGHT(20)) attack (
+    draw_object #(.COLOR(12'hf_f_f),.WIDTH(40),.HEIGHT(20)) attack_horizontal (
         .clk(pclk),
         .rst(rst),
         .hcount_in(hcount_out_hero),
@@ -310,15 +326,36 @@ module main(
         .vsync_in(vsync_out_hero),
         .vblnk_in(vblnk_out_hero),
         .rgb_in(rgb_out_hero),
-        .x_pos(attack_x_pos),
-        .y_pos(attack_y_pos),
-        .hcount_out(hcount_out_attack),
-        .hsync_out(hsync_out_attack),
-        .hblnk_out(hblnk_out_attack),
-        .vcount_out(vcount_out_attack),
-        .vsync_out(vsync_out_attack),
-        .vblnk_out(vblnk_out_attack),
-        .rgb_out(rgb_out_attack)
+        .x_pos(horizontal_attack_x_pos),
+        .y_pos(horizontal_attack_y_pos),
+        .hcount_out(hcount_out_attack_horizontal),
+        .hsync_out(hsync_out_attack_horizontal),
+        .hblnk_out(hblnk_out_attack_horizontal),
+        .vcount_out(vcount_out_attack_horizontal),
+        .vsync_out(vsync_out_attack_horizontal),
+        .vblnk_out(vblnk_out_attack_horizontal),
+        .rgb_out(rgb_out_attack_horizontal)
+    );
+
+    draw_object #(.COLOR(12'hf_f_f),.WIDTH(20),.HEIGHT(40)) attack_vertical (
+        .clk(pclk),
+        .rst(rst),
+        .hcount_in(hcount_out_attack_horizontal),
+        .hsync_in(hsync_out_attack_horizontal),
+        .hblnk_in(hblnk_out_attack_horizontal),
+        .vcount_in(vcount_out_attack_horizontal),
+        .vsync_in(vsync_out_attack_horizontal),
+        .vblnk_in(vblnk_out_attack_horizontal),
+        .rgb_in(rgb_out_attack_horizontal),
+        .x_pos(vertical_attack_x_pos),
+        .y_pos(vertical_attack_y_pos),
+        .hcount_out(hcount_out_attack_vertical),
+        .hsync_out(hsync_out_attack_vertical),
+        .hblnk_out(hblnk_out_attack_vertical),
+        .vcount_out(vcount_out_attack_vertical),
+        .vsync_out(vsync_out_attack_vertical),
+        .vblnk_out(vblnk_out_attack_vertical),
+        .rgb_out(rgb_out_attack_vertical)
     );
 
     enemy_ctl_unit my_enemy_ctl (
@@ -338,13 +375,13 @@ module main(
     enemy (
         .clk(pclk),
         .rst(rst),
-        .hcount_in(hcount_out_attack),
-        .hsync_in(hsync_out_attack),
-        .hblnk_in(hblnk_out_attack),
-        .vcount_in(vcount_out_attack),
-        .vsync_in(vsync_out_attack),
-        .vblnk_in(vblnk_out_attack),
-        .rgb_in(rgb_out_attack),
+        .hcount_in(hcount_out_attack_vertical),
+        .hsync_in(hsync_out_attack_vertical),
+        .hblnk_in(hblnk_out_attack_vertical),
+        .vcount_in(vcount_out_attack_vertical),
+        .vsync_in(vsync_out_attack_vertical),
+        .vblnk_in(vblnk_out_attack_vertical),
+        .rgb_in(rgb_out_attack_vertical),
         .x_pos(x_pos_enemy),
         .y_pos(y_pos_enemy),
         .hcount_out(hcount_out_enemy),
@@ -413,13 +450,33 @@ module main(
         .char_code(addr_char[10:4])
     );
     
+    uart_communication my_uart (
+        .clk(clk100MHz),
+        .rst(rst),
+        .rx(rx),
+        .tx(tx),
+        .uart_data(uart_button),
+        .rx_empty(rx_empty)
+    );
+    
+    uart_decode my_uart_decode (
+        .clk(clk100MHz),
+        .rst(rst),
+        .empty(rx_empty),
+        .uart_data(uart_button),
+        .btnAttack(move_attack),
+        .btnUp(move_up),
+        .btnLeft(move_left),
+        .btnRight(move_right),
+        .btnDown(move_down)
+    );
+
+    assign led [7:0] = uart_button [7:0];
     assign score_overall = score_map + score_time;
     assign hs = hsync_out_score;
     assign vs = vsync_out_score;
     assign r = rgb_out_score [11:8];
     assign g = rgb_out_score [7:4];
     assign b = rgb_out_score [3:0];
-    
-    //assign led[15:0] = ;//{space,up,left,right,down};
  
 endmodule
