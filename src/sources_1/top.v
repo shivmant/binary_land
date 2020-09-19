@@ -63,9 +63,8 @@ module top(
     );
       
     //MODULES
+    wire [11:0] x_pos_enemy, y_pos_enemy;
     
-    wire [11:0] x_pos_enemy, y_pos_enemy, x_pos_wall, y_pos_wall; 
-    //     TEST
     wire [23:0] x_pos_attack, y_pos_attack;
     wire [23:0] x_pos_hero, y_pos_hero;    
     wire [7:0] collision;                  
@@ -129,6 +128,7 @@ module top(
     wire [10:0] addr_char;
     wire [7:0] char_xy;
     wire attack_dir;
+    wire add_time;
     wire [23:0] score_map, score_req, score_time, score_overall, score_enemy;
     
     // UART
@@ -206,7 +206,7 @@ module top(
     map_ctl_unit my_area (              
         .clk(pclk),                    
         .rst(rst),                     
-        .next_level(level_rst|time_out),                   
+        .next_level(level_rst|time_out|player_collision),                   
         .hcount_in(hcount_out_goal),   
         .hsync_in(hsync_out_goal),     
         .hblnk_in(hblnk_out_goal),     
@@ -223,16 +223,15 @@ module top(
         .vcount_out(vcount_out_pickup),
         .vsync_out(vsync_out_pickup),  
         .vblnk_out(vblnk_out_pickup),  
-        .rgb_out(rgb_out_pickup),      
-        .wall_x_pos(x_pos_wall),       
-        .wall_y_pos(y_pos_wall),       
+        .rgb_out(rgb_out_pickup),          
         .collision(collision),         
-        .score_out(score_map)          
+        .score_out(score_map),
+        .add_time(add_time)       
     );                                 
     
     hero_ctl my_hero_ctl (           
         .clk(clk100MHz),              
-        .rst(rst|level_rst|time_out),         
+        .rst(rst|level_rst|time_out|player_collision),         
         .up(move_up),                  
         .left(move_left),              
         .right(move_right),            
@@ -311,10 +310,41 @@ module top(
         .vblnk_out(vblnk_out_attack),            
         .rgb_out(rgb_out_attack)                 
     );                                           
-
+    
+//    enemies (
+//        .clk(clk100MHz), 
+//        .pclk(pclk),                  
+//        .rst(rst|level_rst|time_out|player_collision),                                 
+//        .hero_x_pos(x_pos_hero),            
+//        .hero_y_pos(y_pos_hero),            
+//        .hero_attack_x_pos(x_pos_attack),   
+//        .hero_attack_y_pos(y_pos_attack),   
+//        .attack_direction(attack_dir),  
+//        .score_in(score_map),
+             
+//        .hcount_in(hcount_out_attack), 
+//        .hsync_in(hsync_out_attack),   
+//        .hblnk_in(hblnk_out_attack),   
+//        .vcount_in(vcount_out_attack), 
+//        .vsync_in(vsync_out_attack),   
+//        .vblnk_in(vblnk_out_attack),   
+//        .rgb_in(rgb_out_attack),       
+                   
+//        .player_collision(player_collision),
+//        .score_out(score_enemy),
+        
+//        .hcount_out(hcount_out_enemy), 
+//        .hsync_out(hsync_out_enemy),   
+//        .hblnk_out(hblnk_out_enemy),   
+//        .vcount_out(vcount_out_enemy), 
+//        .vsync_out(vsync_out_enemy),   
+//        .vblnk_out(vblnk_out_enemy),   
+//        .rgb_out(rgb_out_enemy) 
+//    );
+    
     enemy_ctl_unit my_enemy_ctl (           
         .clk(clk100MHz),                     
-        .rst(rst|level_rst|time_out),                                   
+        .rst(rst|level_rst|time_out|player_collision),                                   
         .hero_x_pos(x_pos_hero),            
         .hero_y_pos(y_pos_hero),            
         .hero_attack_x_pos(x_pos_attack),   
@@ -385,6 +415,7 @@ module top(
         .clk(clk100MHz),
         .rst(rst),
         .lvl(level),
+        .add_time(add_time),
         .counter(time_count),
         .time_out(time_out)
     );

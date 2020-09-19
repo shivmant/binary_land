@@ -7,6 +7,8 @@
 -- parametraziatiom : el3ctriciian
 -------------------------------------------------------
 
+-- source: https://github.com/el3ctrician/lfsr/blob/master/lfsr.vhd
+
 library IEEE;
     use IEEE.STD_LOGIC_1164.ALL;
     use IEEE.NUMERIC_STD.ALL;

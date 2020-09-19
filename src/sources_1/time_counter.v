@@ -26,6 +26,7 @@ module time_counter
     input wire clk,
     input wire rst,
     input wire [9:0] lvl,
+    input wire add_time,
     output reg [11:0] counter,
     output reg time_out
     );
@@ -53,23 +54,25 @@ module time_counter
     
     always @*
     begin
-        if(lvl != lvl_buf)
-        begin
-            counter_nxt = INIT_TIME;
-            lvl_buf_nxt = lvl;
-        end
+        if(add_time)
+            counter_nxt = counter + 5;
         else
-        begin
-            counter_nxt = counter - 1;
-            if(counter == 0)
+            if(lvl != lvl_buf)
             begin
                 counter_nxt = INIT_TIME;
-                time_out_nxt = 1;
+                lvl_buf_nxt = lvl;
             end
             else
-                time_out_nxt = 0;
-        end
-            
+            begin
+                counter_nxt = counter - 1;
+                if(counter == 0)
+                begin
+                    counter_nxt = INIT_TIME;
+                    time_out_nxt = 1;
+                end
+                else
+                    time_out_nxt = 0;
+            end
     end
         
     clk_divider
