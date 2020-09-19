@@ -17,21 +17,10 @@ module vga_timing (
   output reg [10:0] hcount = 0,
   output wire hsync,
   output wire hblnk,
-  input wire pclk,
+  input wire clk,
   input wire rst
   );
   
-  
-    /* 800x600  
-    localparam HOR_TOTAL_TIME = 1056;
-    localparam HOR_ADDR_TIME = 800;
-    localparam HOR_SYNC_START = 840;
-    localparam HOR_SYNC_TIME = 128;
-    localparam VER_TOTAL_TIME = 628;
-    localparam VER_ADDR_TIME = 600;
-    localparam VER_SYNC_START = 601;
-    localparam VER_SYNC_TIME = 4;*/
-    
     // 1024x768
     localparam HOR_TOTAL_TIME = 1344;
     localparam HOR_ADDR_TIME = 1024;
@@ -51,24 +40,43 @@ module vga_timing (
     assign hsync = ((hcount >= HOR_SYNC_START) && (hcount < (HOR_SYNC_START + HOR_SYNC_TIME)));
     assign vsync = ((vcount >= VER_SYNC_START) && (vcount < (VER_SYNC_START + VER_SYNC_TIME)));
 
-    always @(posedge pclk or posedge rst)
-    if(rst)
+    reg [10:0] vcount_nxt;
+    reg [10:0] hcount_nxt; 
+    
+    always @(posedge clk) 
     begin
-        hcount <= 0;
-        vcount <= 0;
-    end
-    else
-    begin
-        if(hcount == (HOR_TOTAL_TIME - 1))
+        if(rst)
         begin
             hcount <= 0;
-            if(vcount == (VER_TOTAL_TIME - 1))
-                vcount <= 0;
-            else
-                vcount <= vcount + 1;
+            vcount <= 0;        
         end
+        else 
+        begin
+            hcount <= hcount_nxt;
+            vcount <= vcount_nxt;
+        end
+    end
+    
+    always @* 
+    begin
+        if((hcount < HOR_TOTAL_TIME - 1) && (vcount < VER_TOTAL_TIME - 1))
+            begin
+                hcount_nxt = hcount + 1;
+                vcount_nxt = vcount;
+            end     
         else
-            hcount <= hcount + 1;
+        begin
+            if((vcount < VER_TOTAL_TIME - 1) && (hcount == HOR_TOTAL_TIME - 1)) 
+            begin
+                hcount_nxt = 0;
+                vcount_nxt = vcount + 1;
+            end
+            else
+            begin
+                hcount_nxt = 0;
+                vcount_nxt = 0;
+            end
+        end
     end
      
 endmodule

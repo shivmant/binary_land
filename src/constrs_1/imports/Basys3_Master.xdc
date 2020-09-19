@@ -9,8 +9,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports clk]
 #create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
  
 ## Switches
-#set_property PACKAGE_PIN V17 [get_ports rst]					
-    #set_property IOSTANDARD LVCMOS33 [get_ports rst]
+set_property PACKAGE_PIN V17 [get_ports rst]					
+    set_property IOSTANDARD LVCMOS33 [get_ports rst]
 #set_property PACKAGE_PIN V16 [get_ports {sw[1]}]					
     #set_property IOSTANDARD LVCMOS33 [get_ports {sw[1]}]
 #set_property PACKAGE_PIN W16 [get_ports {sw[2]}]					
@@ -108,16 +108,16 @@ set_property PACKAGE_PIN L1 [get_ports {led[15]}]
 
 
 ##Buttons
-set_property PACKAGE_PIN U18 [get_ports rst]						
-	set_property IOSTANDARD LVCMOS33 [get_ports rst]
-#set_property PACKAGE_PIN T18 [get_ports btnUp]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports btnUp]
-#set_property PACKAGE_PIN W19 [get_ports btnLeft]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports btnLeft]
-#set_property PACKAGE_PIN T17 [get_ports btnRight]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports btnRight]
-#set_property PACKAGE_PIN U17 [get_ports btnDown]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports btnDown]
+set_property PACKAGE_PIN U18 [get_ports move_attack]						
+	set_property IOSTANDARD LVCMOS33 [get_ports move_attack]
+set_property PACKAGE_PIN T18 [get_ports move_up]						
+	set_property IOSTANDARD LVCMOS33 [get_ports move_up]
+set_property PACKAGE_PIN W19 [get_ports move_left]						
+	set_property IOSTANDARD LVCMOS33 [get_ports move_left]
+set_property PACKAGE_PIN T17 [get_ports move_right]						
+	set_property IOSTANDARD LVCMOS33 [get_ports move_right]
+set_property PACKAGE_PIN U17 [get_ports move_down]						
+	set_property IOSTANDARD LVCMOS33 [get_ports move_down]
  
 
 

@@ -27,29 +27,57 @@ module time_counter
     input wire rst,
     input wire [9:0] lvl,
     output reg [11:0] counter,
-    output reg [23:0] score_out
+    output reg time_out
     );
     
-    reg [9:0] lvl_nxt;
+    reg [9:0] lvl_buf, lvl_buf_nxt;
+    reg [11:0] counter_nxt;
+    wire clk_div;
+    reg time_out_nxt;
     
-    initial
-    begin
-        counter = INIT_TIME;
-    end
-    
-    always @(posedge clk, posedge rst)
+    always @(posedge clk_div, posedge rst)
     begin
         if(rst)
-            counter = 12'b0;
+        begin
+            counter <= INIT_TIME;
+            time_out <= 0;
+            lvl_buf <= lvl;
+        end
         else
         begin
-            counter = counter - 1;
-            if(lvl != lvl_nxt)
-            begin
-                score_out = counter * 10;
-                counter = INIT_TIME;
-                lvl_nxt = lvl;
-            end
+            counter <= counter_nxt;
+            time_out <= time_out_nxt;
+            lvl_buf <= lvl_buf_nxt;
         end
-    end   
+    end
+    
+    always @*
+    begin
+        if(lvl != lvl_buf)
+        begin
+            counter_nxt = INIT_TIME;
+            lvl_buf_nxt = lvl;
+        end
+        else
+        begin
+            counter_nxt = counter - 1;
+            if(counter == 0)
+            begin
+                counter_nxt = INIT_TIME;
+                time_out_nxt = 1;
+            end
+            else
+                time_out_nxt = 0;
+        end
+            
+    end
+        
+    clk_divider
+    #(.FREQ(1))
+     my_clk_divider_timer(
+      .clk100MHz(clk),
+      .rst(rst),
+      .clk_div(clk_div)
+    );    
+        
 endmodule

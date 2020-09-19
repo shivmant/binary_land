@@ -31,10 +31,9 @@ module hero_ctl(
     input wire [7:0] collision,
     output reg [23:0] x_pos,
     output reg [23:0] y_pos,
-    output reg [11:0] x_pos_attack_horizontal,
-    output reg [11:0] y_pos_attack_horizontal,
-    output reg [11:0] x_pos_attack_vertical,
-    output reg [11:0] y_pos_attack_vertical
+    output reg [23:0] x_pos_attack,
+    output reg [23:0] y_pos_attack,
+    output reg attack_direction
     );
     
     localparam IDLE = 3'b000,
@@ -48,24 +47,33 @@ module hero_ctl(
                ATTACK_WIDTH = 20,
                ATTACK_HEIGHT = 40;
                
-    localparam MOVING_TIME = 60;           
-    
+    localparam MOVING_TIME = 60;    
+           
+    localparam UPDOWN = 0,
+               LEFTRIGHT = 1;
     
     reg [23:0] x_pos_nxt, y_pos_nxt;
+    reg [23:0] x_pos_attack_nxt, y_pos_attack_nxt;
     reg [2:0] state, state_nxt;
+          
+    reg [2:0] last_state, last_state_nxt;
     reg [20:0] counter, counter_nxt;
-    reg [11:0] x_pos_attack_horizontal_nxt, y_pos_attack_horizontal_nxt;
-    reg [11:0] x_pos_attack_vertical_nxt, y_pos_attack_vertical_nxt;
-    reg [11:0] x_pos_attack_horizontal_temp, y_pos_attack_horizontal_temp;
-    reg [11:0] x_pos_attack_vertical_temp, y_pos_attack_vertical_temp;
+    reg attack_direction_nxt;
+    wire clk_div;
     
-    always @(posedge clk or posedge rst)
+    always @(posedge clk_div or posedge rst)
         if(rst)
         begin
             x_pos[11:0] <= 542;
             y_pos[11:0] <= 648;
             x_pos[23:12] <= 422;
             y_pos[23:12] <= 648;
+            x_pos_attack[11:0] <= 1025;
+            y_pos_attack[11:0] <= 0;
+            x_pos_attack[23:12] <= 1025;
+            y_pos_attack[23:12] <= 0;
+            attack_direction <= 0;
+            last_state <= IDLE;
             counter <= 0;
             state <= IDLE;
         end
@@ -73,10 +81,10 @@ module hero_ctl(
         begin
             x_pos <= x_pos_nxt;
             y_pos <= y_pos_nxt;
-            x_pos_attack_horizontal <= x_pos_attack_horizontal_nxt;
-            y_pos_attack_horizontal <= y_pos_attack_horizontal_nxt;
-            x_pos_attack_vertical <= x_pos_attack_vertical_nxt;
-            y_pos_attack_vertical <= y_pos_attack_vertical_nxt;
+            x_pos_attack <= x_pos_attack_nxt;
+            y_pos_attack <= y_pos_attack_nxt;
+            attack_direction <= attack_direction_nxt;
+            last_state <= last_state_nxt;
             counter <= counter_nxt;
             state <= state_nxt;
         end
@@ -86,10 +94,9 @@ module hero_ctl(
         counter_nxt = counter;
         x_pos_nxt = x_pos;
         y_pos_nxt = y_pos;
-        x_pos_attack_horizontal_nxt = x_pos_attack_horizontal;
-        y_pos_attack_horizontal_nxt = y_pos_attack_horizontal;
-        x_pos_attack_vertical_nxt = x_pos_attack_vertical;
-        y_pos_attack_vertical_nxt = y_pos_attack_vertical;
+        x_pos_attack_nxt = x_pos_attack;
+        y_pos_attack_nxt = y_pos_attack;
+        last_state_nxt = last_state;
         case(state)
             IDLE:
             begin
@@ -110,8 +117,6 @@ module hero_ctl(
             end
             MOVING_UP:
             begin
-                x_pos_attack_vertical_temp = x_pos + ATTACK_WIDTH;
-                y_pos_attack_vertical_temp = y_pos - SQUARE_SIDE - ATTACK_HEIGHT;
                 if(counter < MOVING_TIME) 
                 begin
                     if(y_pos[11:0] - 1 >= 108 && !collision[3])                  
@@ -128,14 +133,13 @@ module hero_ctl(
                 end
                 else 
                 begin
+                    last_state_nxt = MOVING_UP;
                     counter_nxt = 0;
                     state_nxt = IDLE;
                 end
             end
             MOVING_LEFT:
             begin
-                //x_pos_attack_horizontal_temp = x_pos - ATTACK_HEIGHT;
-                //y_pos_attack_horizontal_temp = y_pos + ATTACK_WIDTH;
                 if(counter < MOVING_TIME) 
                 begin
                     if(x_pos[11:0] - 1 >= 62 && !collision[0])                    
@@ -152,14 +156,13 @@ module hero_ctl(
                 end
                 else 
                 begin
+                    last_state_nxt = MOVING_LEFT;
                     counter_nxt = 0;
                     state_nxt = IDLE;
                 end
             end
             MOVING_RIGHT:
             begin
-                //x_pos_attack_horizontal_temp = x_pos + SQUARE_SIDE;
-                //y_pos_attack_horizontal_temp = y_pos + ATTACK_WIDTH;
                 if(counter < MOVING_TIME) 
                 begin
                     if(x_pos[11:0] + SQUARE_SIDE + 1 <= 962 && !collision[1])
@@ -175,14 +178,13 @@ module hero_ctl(
                     state_nxt = MOVING_RIGHT;
                 end
                 else begin
+                    last_state_nxt = MOVING_RIGHT;
                     counter_nxt = 0;
                     state_nxt = IDLE;
                 end
             end
             MOVING_DOWN:
             begin
-                x_pos_attack_vertical_temp = x_pos + ATTACK_WIDTH;
-                y_pos_attack_vertical_temp = y_pos + SQUARE_SIDE;
                 if(counter < MOVING_TIME) 
                 begin
                     if(y_pos[11:0] + SQUARE_SIDE + 1 <= 708 && !collision[2])                   
@@ -194,12 +196,12 @@ module hero_ctl(
                     else
                         y_pos_nxt[23:12] = y_pos[23:12];
                     x_pos_nxt = x_pos;
-                    state_nxt = IDLE;
                     counter_nxt = counter + 1;
                     state_nxt = MOVING_DOWN;
                 end
                 else 
                 begin
+                    last_state_nxt = MOVING_DOWN;
                     counter_nxt = 0;
                     state_nxt = IDLE;
                 end
@@ -207,27 +209,65 @@ module hero_ctl(
             ATTACKING:
             begin
                 x_pos_nxt = x_pos;
-                y_pos_nxt = y_pos;  
-                x_pos_attack_horizontal_nxt = x_pos_attack_horizontal_temp;
-                y_pos_attack_horizontal_nxt = y_pos_attack_horizontal_temp;
-                x_pos_attack_vertical_nxt = x_pos_attack_vertical_temp;
-                y_pos_attack_vertical_nxt = y_pos_attack_vertical_temp;              
-                if(counter == 10)
+                y_pos_nxt = y_pos;
+                if(counter < MOVING_TIME)
                 begin
-                    x_pos_attack_horizontal_nxt = 200;
-                    y_pos_attack_horizontal_nxt = 50;
-                    x_pos_attack_vertical_nxt = 200;
-                    y_pos_attack_vertical_nxt = 50;
-                    counter_nxt = 0;
-                    state_nxt = IDLE;
+                    case(last_state)
+                        MOVING_UP:
+                        begin
+                            x_pos_attack_nxt[11:0]  = x_pos[11:0] + ATTACK_WIDTH;
+                            y_pos_attack_nxt[11:0]  = y_pos[11:0] - ATTACK_HEIGHT;
+                            x_pos_attack_nxt[23:12] = x_pos[23:12] + ATTACK_WIDTH;
+                            y_pos_attack_nxt[23:12] = y_pos[23:12] - ATTACK_HEIGHT;
+                            attack_direction_nxt = UPDOWN;
+                        end
+                        MOVING_LEFT:    
+                        begin 
+                            x_pos_attack_nxt[11:0]  = x_pos[11:0] - ATTACK_HEIGHT;
+                            y_pos_attack_nxt[11:0]  = y_pos[11:0] + ATTACK_WIDTH;
+                            x_pos_attack_nxt[23:12] = x_pos[23:12] + SQUARE_SIDE; 
+                            y_pos_attack_nxt[23:12] = y_pos[23:12] + ATTACK_WIDTH;
+                            attack_direction_nxt = LEFTRIGHT;
+                        end   
+                        MOVING_RIGHT:    
+                        begin 
+                            x_pos_attack_nxt[11:0]  = x_pos[11:0] + SQUARE_SIDE;
+                            y_pos_attack_nxt[11:0]  = y_pos[11:0] + ATTACK_WIDTH;
+                            x_pos_attack_nxt[23:12] = x_pos[23:12] - ATTACK_HEIGHT;
+                            y_pos_attack_nxt[23:12] = y_pos[23:12] + ATTACK_WIDTH; 
+                            attack_direction_nxt = LEFTRIGHT;
+                        end   
+                        MOVING_DOWN:
+                        begin  
+                            x_pos_attack_nxt[11:0]  = x_pos[11:0] + ATTACK_WIDTH;
+                            y_pos_attack_nxt[11:0]  = y_pos[11:0] + SQUARE_SIDE;
+                            x_pos_attack_nxt[23:12] = x_pos[23:12] + ATTACK_WIDTH;
+                            y_pos_attack_nxt[23:12] = y_pos[23:12] + SQUARE_SIDE;
+                            attack_direction_nxt = UPDOWN;
+                        end   
+                    endcase
+                    counter_nxt = counter + 1;
+                    state_nxt = ATTACKING;
                 end
                 else
                 begin
-                    counter_nxt = counter + 1;
-                    state_nxt = ATTACKING;
+                    x_pos_attack_nxt[11:0]  = 1025;
+                    y_pos_attack_nxt[11:0]  = 0;
+                    x_pos_attack_nxt[23:12] = 1025;
+                    y_pos_attack_nxt[23:12] = 0;
+                    counter_nxt = 0;
+                    state_nxt = IDLE;
                 end
             end          
         endcase
     end
+    
+    clk_divider
+    #(.FREQ(150))
+     my_clk_divider(
+      .clk100MHz(clk),
+      .rst(rst),
+      .clk_div(clk_div)
+    );
     
 endmodule
