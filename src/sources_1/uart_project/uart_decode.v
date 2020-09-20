@@ -23,7 +23,6 @@
 module uart_decode(
     input  wire clk,
     input  wire rst,
-    input  wire empty,
     input  wire [7:0] uart_data,
     output reg btnAttack,
     output reg btnUp,
@@ -50,14 +49,12 @@ module uart_decode(
             btnUp     <= btnUp_nxt;
             btnLeft   <= btnLeft_nxt;
             btnRight  <= btnRight_nxt;
-            btnDown   <= btnDown_nxt;        
+            btnDown   <= btnDown_nxt;       
         end    
     end
     
     always @*
     begin
-        if(empty)
-        begin
             if(uart_data == 8'h77) //w
                 btnUp_nxt = 1;
             else if(uart_data == 8'h73) //s
@@ -76,14 +73,5 @@ module uart_decode(
                 btnRight_nxt  = 0;
                 btnDown_nxt   = 0;
             end
-        end
-        else
-        begin
-            btnAttack_nxt = 0;
-            btnUp_nxt     = 0;
-            btnLeft_nxt   = 0;
-            btnRight_nxt  = 0;
-            btnDown_nxt   = 0;   
-        end    
     end
 endmodule

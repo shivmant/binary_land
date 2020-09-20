@@ -78,7 +78,7 @@ module map_ctl_unit(
                 COLLISION = 2'b10,
                 INIT = 2'b11;       
 
-    always @(posedge clk, posedge rst)
+    always @(posedge clk)
     begin
         if(rst)
         begin

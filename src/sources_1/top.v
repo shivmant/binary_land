@@ -24,25 +24,18 @@ module top(
     input  wire clk,
     input  wire rst,
     input  wire rx,
-    //input wire move_attack,
-    //input wire move_up,
-    //input wire move_left,
-    //input wire move_down,
-    //input wire move_right,
-    output wire tx,
     output wire vs,
     output wire hs,
     output wire [3:0] r,
     output wire [3:0] g,
     output wire [3:0] b,
-    output wire pclk_mirror,
-    output wire [15:0] led
+    output wire pclk_mirror
     );
     
     // CLOCK
     
     wire locked;
-    wire pclk, clk100MHz;
+    wire pclk, clk100MHz, clk50MHz;
     
     ODDR pclk_oddr (
         .Q(pclk_mirror),
@@ -57,8 +50,9 @@ module top(
     clk_generator my_clk_generator (   
         .clk(clk),
         .reset(rst),
-        .clk65MHz(pclk),
         .clk100MHz(clk100MHz),
+        .clk65MHz(pclk),
+        .clk50MHz(clk50MHz),
         .locked(locked)
     );
       
@@ -129,11 +123,10 @@ module top(
     wire [7:0] char_xy;
     wire attack_dir;
     wire add_time;
-    wire [23:0] score_map, score_req, score_time, score_overall, score_enemy;
+    wire [23:0] score_map, score_req, score_time, score_enemy;
     
     // UART
     wire [7:0] uart_button;
-    wire rx_empty;
     wire move_attack, move_up, move_left, move_right, move_down; 
      
     vga_timing my_vga_timing (
@@ -311,40 +304,10 @@ module top(
         .rgb_out(rgb_out_attack)                 
     );                                           
     
-//    enemies (
-//        .clk(clk100MHz), 
-//        .pclk(pclk),                  
-//        .rst(rst|level_rst|time_out|player_collision),                                 
-//        .hero_x_pos(x_pos_hero),            
-//        .hero_y_pos(y_pos_hero),            
-//        .hero_attack_x_pos(x_pos_attack),   
-//        .hero_attack_y_pos(y_pos_attack),   
-//        .attack_direction(attack_dir),  
-//        .score_in(score_map),
-             
-//        .hcount_in(hcount_out_attack), 
-//        .hsync_in(hsync_out_attack),   
-//        .hblnk_in(hblnk_out_attack),   
-//        .vcount_in(vcount_out_attack), 
-//        .vsync_in(vsync_out_attack),   
-//        .vblnk_in(vblnk_out_attack),   
-//        .rgb_in(rgb_out_attack),       
-                   
-//        .player_collision(player_collision),
-//        .score_out(score_enemy),
-        
-//        .hcount_out(hcount_out_enemy), 
-//        .hsync_out(hsync_out_enemy),   
-//        .hblnk_out(hblnk_out_enemy),   
-//        .vcount_out(vcount_out_enemy), 
-//        .vsync_out(vsync_out_enemy),   
-//        .vblnk_out(vblnk_out_enemy),   
-//        .rgb_out(rgb_out_enemy) 
-//    );
-    
     enemy_ctl_unit my_enemy_ctl (           
         .clk(clk100MHz),                     
-        .rst(rst|level_rst|time_out|player_collision),                                   
+        .rst(rst), 
+        .level_rst(level_rst|time_out|player_collision),                                  
         .hero_x_pos(x_pos_hero),            
         .hero_y_pos(y_pos_hero),            
         .hero_attack_x_pos(x_pos_attack),   
@@ -429,18 +392,15 @@ module top(
     );
     
     uart_communication my_uart (
-        .clk(clk100MHz),
+        .clk(clk50MHz),
         .rst(rst),
         .rx(rx),
-        .tx(tx),
-        .uart_data(uart_button),
-        .rx_empty(rx_empty)
+        .uart_data(uart_button)
     );
     
     uart_decode my_uart_decode (
         .clk(clk100MHz),
         .rst(rst),
-        .empty(rx_empty),
         .uart_data(uart_button),
         .btnAttack(move_attack),
         .btnUp(move_up),
@@ -449,8 +409,6 @@ module top(
         .btnDown(move_down)
     );
     
-    assign led[12:8] = {move_attack,move_up,move_left,move_right,move_down};
-    assign led[7:0] = uart_button [7:0];
     assign hs = hsync_out_score;
     assign vs = vsync_out_score;
     assign r = rgb_out_score [11:8];

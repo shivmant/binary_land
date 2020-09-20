@@ -1,7 +1,7 @@
 // Listing 4.11
 module mod_m_counter
    #(
-    parameter N=4, //(4) number of bits in counter
+    parameter N=4, // number of bits in counter
               M=10 // mod-M
    )
    (

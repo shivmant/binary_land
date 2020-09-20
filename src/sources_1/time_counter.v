@@ -36,7 +36,7 @@ module time_counter
     wire clk_div;
     reg time_out_nxt;
     
-    always @(posedge clk_div, posedge rst)
+    always @(posedge clk_div)
     begin
         if(rst)
         begin

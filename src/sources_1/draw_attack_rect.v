@@ -52,7 +52,7 @@ module draw_attack_rect
     localparam WIDTH = 40,
                HEIGHT = 20;
         
-    always @(posedge clk or posedge rst)
+    always @(posedge clk)
     begin
         if(rst)
         begin

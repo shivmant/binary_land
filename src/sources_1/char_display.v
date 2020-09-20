@@ -51,7 +51,7 @@ module char_display
     reg [11:0] rgb_out_nxt;
     wire [10:0] hcount_rect, vcount_rect;
     
-    always @(posedge pclk or posedge rst)
+    always @(posedge pclk)
         if(rst)
         begin
             hcount_out <= 0;

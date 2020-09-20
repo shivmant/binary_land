@@ -34,7 +34,7 @@ module level_management_unit(
     reg hero_rst_nxt; 
     reg [23:0] score_req_nxt;                           
                                                     
-    always @(posedge clk or posedge rst)            
+    always @(posedge clk)            
         if(rst)                                     
         begin                                       
             level <= 0;                             

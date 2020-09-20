@@ -8,8 +8,7 @@ module uart_rx
     input wire clk, reset,
     input wire rx, s_tick,
     output reg rx_done_tick,
-    output wire [7:0] dout, 
-    output wire enable
+    output wire [7:0] dout
    );
 
    // symbolic state declaration
@@ -24,7 +23,6 @@ module uart_rx
    reg [3:0] s_reg, s_next;
    reg [2:0] n_reg, n_next;
    reg [7:0] b_reg, b_next;
-   reg data_enable, data_enable_next;
 
    // body
    // FSMD state & data registers
@@ -35,15 +33,13 @@ module uart_rx
             s_reg <= 0;
             n_reg <= 0;
             b_reg <= 0;
-            data_enable <= 0;
          end
       else
          begin
+            state_reg <= state_next;
             s_reg <= s_next;
             n_reg <= n_next;
             b_reg <= b_next;
-            state_reg <= state_next;
-            data_enable <= data_enable_next;
          end
 
    // FSMD next-state logic
@@ -54,7 +50,6 @@ module uart_rx
       s_next = s_reg;
       n_next = n_reg;
       b_next = b_reg;
-      data_enable_next = 0;
       case (state_reg)
          idle:
             if (~rx)
@@ -90,7 +85,6 @@ module uart_rx
                if (s_reg==(SB_TICK-1))
                   begin
                      state_next = idle;
-                     data_enable_next = 1;
                      rx_done_tick =1'b1;
                   end
                else
@@ -99,6 +93,5 @@ module uart_rx
    end
    // output
    assign dout = b_reg;
-   assign enable = data_enable;
 
 endmodule

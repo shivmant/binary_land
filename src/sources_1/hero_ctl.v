@@ -266,7 +266,7 @@ module hero_ctl(
     #(.FREQ(150))
      my_clk_divider(
       .clk100MHz(clk),
-      .rst(rst),
+      .rst(),
       .clk_div(clk_div)
     );
     

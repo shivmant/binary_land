@@ -20,6 +20,7 @@
 module enemy_ctl_unit(
     input wire clk,
     input wire rst,
+    input wire level_rst,
     input wire [23:0] hero_x_pos, 
     input wire [23:0] hero_y_pos,
     input wire [23:0] hero_attack_x_pos,
@@ -38,7 +39,8 @@ module enemy_ctl_unit(
                MOVING_LEFT  = 3'b010,
                MOVING_RIGHT = 3'b011,
                MOVING_DOWN  = 3'b100,
-               ELIMINATED   = 3'b101;
+               ELIMINATED   = 3'b101,
+               INIT         = 3'b110;
 
     localparam MOVING_TIME = 60,
                IDLE_TIME   = 20;
@@ -60,8 +62,8 @@ module enemy_ctl_unit(
     reg [23:0] score_out_nxt;
     wire clk_div;
        
-    always @(posedge clk_div or posedge rst)
-        if(rst)
+    always @(posedge clk_div)
+        if(rst|level_rst)
         begin
             x_pos <= 542;
             y_pos <= 108;
@@ -237,7 +239,7 @@ module enemy_ctl_unit(
                 x_pos_nxt = 1025;
                 y_pos_nxt = 0;
                 state_nxt = ELIMINATED;
-            end   
+            end
         endcase
     end
     
@@ -254,7 +256,7 @@ module enemy_ctl_unit(
     #(.FREQ(150))      
      my_clk_divider(   
       .clk100MHz(clk), 
-      .rst(rst),       
+      .rst(),       
       .clk_div(clk_div)
     ); 
                     

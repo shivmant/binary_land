@@ -45,7 +45,7 @@ module draw_background(
     localparam GREY = 12'h8_8_8;
     localparam BROWN = 12'h6_3_0;   
         
-    always @(posedge clk, posedge rst)
+    always @(posedge clk)
     begin
         if(rst)
         begin

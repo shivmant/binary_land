@@ -89,3 +89,4 @@ module fifo
    assign empty = empty_reg;
 
 endmodule
+

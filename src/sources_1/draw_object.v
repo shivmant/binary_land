@@ -50,7 +50,7 @@ module draw_object
     localparam BLACK = 12'h0_0_0;
     localparam BLUE = 12'h0_1_c;
         
-    always @(posedge clk or posedge rst)
+    always @(posedge clk)
     begin
         if(rst)
         begin

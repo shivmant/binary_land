@@ -40,7 +40,7 @@ module holder
         state <= IDLE;
     end
     
-    always @(posedge clk or posedge rst)
+    always @(posedge clk)
     begin                             
         if(rst)                       
         begin

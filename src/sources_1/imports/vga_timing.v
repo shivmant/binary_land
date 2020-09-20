@@ -32,7 +32,6 @@ module vga_timing (
     localparam VER_SYNC_TIME = 6;
 
   // Describe the actual circuit for the assignment.
-  // Video timing controller set for 800x600@60fps
   // using a 40 MHz pixel clock per VESA spec.
     
     assign hblnk = (hcount >= HOR_ADDR_TIME);
