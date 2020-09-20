@@ -108,16 +108,16 @@ set_property PACKAGE_PIN L1 [get_ports {led[15]}]
 
 
 ##Buttons
-set_property PACKAGE_PIN U18 [get_ports move_attack]						
-	set_property IOSTANDARD LVCMOS33 [get_ports move_attack]
-set_property PACKAGE_PIN T18 [get_ports move_up]						
-	set_property IOSTANDARD LVCMOS33 [get_ports move_up]
-set_property PACKAGE_PIN W19 [get_ports move_left]						
-	set_property IOSTANDARD LVCMOS33 [get_ports move_left]
-set_property PACKAGE_PIN T17 [get_ports move_right]						
-	set_property IOSTANDARD LVCMOS33 [get_ports move_right]
-set_property PACKAGE_PIN U17 [get_ports move_down]						
-	set_property IOSTANDARD LVCMOS33 [get_ports move_down]
+#set_property PACKAGE_PIN U18 [get_ports move_attack]						
+	#set_property IOSTANDARD LVCMOS33 [get_ports move_attack]
+#set_property PACKAGE_PIN T18 [get_ports move_up]						
+	#set_property IOSTANDARD LVCMOS33 [get_ports move_up]
+#set_property PACKAGE_PIN W19 [get_ports move_left]						
+	#set_property IOSTANDARD LVCMOS33 [get_ports move_left]
+#set_property PACKAGE_PIN T17 [get_ports move_right]						
+	#set_property IOSTANDARD LVCMOS33 [get_ports move_right]
+#set_property PACKAGE_PIN U17 [get_ports move_down]						
+	#set_property IOSTANDARD LVCMOS33 [get_ports move_down]
  
 
 

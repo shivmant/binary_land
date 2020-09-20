@@ -24,11 +24,11 @@ module top(
     input  wire clk,
     input  wire rst,
     input  wire rx,
-    input wire move_attack,
-    input wire move_up,
-    input wire move_left,
-    input wire move_down,
-    input wire move_right,
+    //input wire move_attack,
+    //input wire move_up,
+    //input wire move_left,
+    //input wire move_down,
+    //input wire move_right,
     output wire tx,
     output wire vs,
     output wire hs,
@@ -134,7 +134,7 @@ module top(
     // UART
     wire [7:0] uart_button;
     wire rx_empty;
-    //wire move_attack, move_up, move_left, move_right, move_down; 
+    wire move_attack, move_up, move_left, move_right, move_down; 
      
     vga_timing my_vga_timing (
         .vcount(vcount_out_timing),
@@ -428,28 +428,29 @@ module top(
         .char_code(addr_char[10:4])
     );
     
-//    uart_communication my_uart (
-//        .clk(clk100MHz),
-//        .rst(rst),
-//        .rx(rx),
-//        .tx(tx),
-//        .uart_data(uart_button),
-//        .rx_empty(rx_empty)
-//    );
+    uart_communication my_uart (
+        .clk(clk100MHz),
+        .rst(rst),
+        .rx(rx),
+        .tx(tx),
+        .uart_data(uart_button),
+        .rx_empty(rx_empty)
+    );
     
-//    uart_decode my_uart_decode (
-//        .clk(clk100MHz),
-//        .rst(rst),
-//        .empty(rx_empty),
-//        .uart_data(uart_button),
-//        .btnAttack(move_attack),
-//        .btnUp(move_up),
-//        .btnLeft(move_left),
-//        .btnRight(move_right),
-//        .btnDown(move_down)
-//    );
+    uart_decode my_uart_decode (
+        .clk(clk100MHz),
+        .rst(rst),
+        .empty(rx_empty),
+        .uart_data(uart_button),
+        .btnAttack(move_attack),
+        .btnUp(move_up),
+        .btnLeft(move_left),
+        .btnRight(move_right),
+        .btnDown(move_down)
+    );
     
-    assign led[4:0] = {move_attack,move_up,move_left,move_right,move_down};
+    assign led[12:8] = {move_attack,move_up,move_left,move_right,move_down};
+    assign led[7:0] = uart_button [7:0];
     assign hs = hsync_out_score;
     assign vs = vsync_out_score;
     assign r = rgb_out_score [11:8];

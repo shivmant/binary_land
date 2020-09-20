@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="32" Path="C:/Users/pawel/Desktop/binary_land/uec2_projekt/vivado/binary_land.xpr">
+<Project Version="7" Minor="32" Path="D:/STUDIA/IV_semestr/Uklady_elektroniki_cyfrowej_II/Projekt_binary_land_test_uart/uec2_projekt/vivado/binary_land.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="fb9531d572bc43ac8c2a551aae737e0c"/>
@@ -181,70 +181,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/fifo.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/uart_communication.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/mod_m_counter.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/uart.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/uart_tx.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/uart_rx.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/debounce.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../src/sources_1/uart_project/uart_decode.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../src/sources_1/time_counter.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -268,6 +204,78 @@
       </File>
       <File Path="$PPRDIR/../src/sources_1/top.v">
         <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/fifo.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/fifo.v"/>
+          <Attr Name="ImportTime" Val="1600097110"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/uart.v"/>
+          <Attr Name="ImportTime" Val="1600097108"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/mod_m_counter.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/mod_m_counter.v"/>
+          <Attr Name="ImportTime" Val="1600097120"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/debounce.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/debounce.v"/>
+          <Attr Name="ImportTime" Val="1600097114"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_tx.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/uart_tx.v"/>
+          <Attr Name="ImportTime" Val="1600097126"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_communication.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/uart_communication.v"/>
+          <Attr Name="ImportTime" Val="1600513594"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_rx.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/uart_rx.v"/>
+          <Attr Name="ImportTime" Val="1600097102"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/uart_project/uart_decode.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../src/sources_1/uart_project/uart_decode.v"/>
+          <Attr Name="ImportTime" Val="1600514676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -420,26 +428,26 @@
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_drc_0" Spec="report_drc" RunStep="route_design" ReportFile="top_drc_routed.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>
-          <ReportConfigOutputOption Name="pb" Type="string" Value="main_drc_routed.pb"/>
-          <ReportConfigOutputOption Name="rpx" Type="string" Value="main_drc_routed.rpx"/>
+          <ReportConfigOutputOption Name="pb" Type="string" Value="top_drc_routed.pb"/>
+          <ReportConfigOutputOption Name="rpx" Type="string" Value="top_drc_routed.rpx"/>
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_methodology_0" Spec="report_methodology" RunStep="route_design" ReportFile="top_methodology_drc_routed.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>
-          <ReportConfigOutputOption Name="pb" Type="string" Value="main_methodology_drc_routed.pb"/>
-          <ReportConfigOutputOption Name="rpx" Type="string" Value="main_methodology_drc_routed.rpx"/>
+          <ReportConfigOutputOption Name="pb" Type="string" Value="top_methodology_drc_routed.pb"/>
+          <ReportConfigOutputOption Name="rpx" Type="string" Value="top_methodology_drc_routed.rpx"/>
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_power_0" Spec="report_power" RunStep="route_design" ReportFile="top_power_routed.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>
-          <ReportConfigOutputOption Name="pb" Type="string" Value="main_power_summary_routed.pb"/>
-          <ReportConfigOutputOption Name="rpx" Type="string" Value="main_power_routed.rpx"/>
+          <ReportConfigOutputOption Name="pb" Type="string" Value="top_power_summary_routed.pb"/>
+          <ReportConfigOutputOption Name="rpx" Type="string" Value="top_power_routed.rpx"/>
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_route_status_0" Spec="report_route_status" RunStep="route_design" ReportFile="top_route_status.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>
-          <ReportConfigOutputOption Name="pb" Type="string" Value="main_route_status.pb"/>
+          <ReportConfigOutputOption Name="pb" Type="string" Value="top_route_status.pb"/>
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_timing_summary_0" Spec="report_timing_summary" RunStep="route_design" ReportFile="top_timing_summary_routed.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>
-          <ReportConfigOutputOption Name="rpx" Type="string" Value="main_timing_summary_routed.rpx"/>
+          <ReportConfigOutputOption Name="rpx" Type="string" Value="top_timing_summary_routed.rpx"/>
         </ReportConfig>
         <ReportConfig Name="impl_1_route_report_incremental_reuse_0" Spec="report_incremental_reuse" RunStep="route_design" ReportFile="top_incremental_reuse_routed.rpt" Version="1" Minor="0">
           <ReportConfigOption Name="dummy_option" Type="string"/>

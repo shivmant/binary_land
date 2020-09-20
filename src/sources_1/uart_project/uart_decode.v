@@ -56,23 +56,8 @@ module uart_decode(
     
     always @*
     begin
-        if(1)
+        if(empty)
         begin
-//            case(uart_data)
-//                8'h77:btnUp_nxt     = 1;
-//                8'h73:btnDown_nxt   = 1;
-//                8'h61:btnLeft_nxt   = 1;
-//                8'h64:btnRight_nxt  = 1;
-//                8'h20:btnAttack_nxt = 1;
-//                default: 
-//                    begin
-//                        btnAttack_nxt = 0;
-//                        btnUp_nxt     = 0;
-//                        btnLeft_nxt   = 0;
-//                        btnRight_nxt  = 0;
-//                        btnDown_nxt   = 0;
-//                    end
-//            endcase
             if(uart_data == 8'h77) //w
                 btnUp_nxt = 1;
             else if(uart_data == 8'h73) //s
